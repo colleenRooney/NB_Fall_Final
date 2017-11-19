@@ -331,17 +331,16 @@ void printRoute(STACK *route, city *start, city *end)
  	while(strcmp(temp.name, end->name) != 0)    //printing out the STACK in order
 	{
 		temp = Pop(route);
-		if(strcmp(temp.name, "junction") != 0 && strcmp(temp.name, end->name) != 0) printf("passing %s... ", temp.name);
+		if(strcmp(temp.name, "junction") != 0 && strcmp(temp.name, end->name) != 0) printf("passing %s... ", temp.name); //don't print junction or last element
 
-		else if(strcmp(temp.name, "junction") == 0)
+		else if(strcmp(temp.name, "junction") == 0) //moving between branches, might change onto different highway
 		{
 			if(strcmp(end->direction, currentDirection->direction) == 0) //if staying on the same highway
     		{
         		printf("continuing %s on %s...", currentDirection->direction, highway);
     		}
-    		else //turning onto new junction
+    		else //turning onto new highway
     		{
-        		//change highway
         		if(strcmp(highway, "Interstate 5") == 0) strcpy(highway, "Highway 26");
         		else strcpy(highway, "Interstate 5");
         		printf("turning %s onto %s...", end->direction, highway);
