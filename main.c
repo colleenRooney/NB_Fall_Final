@@ -24,9 +24,12 @@ void main(void)
 
 	//run functions
 	createMap(root);
-	printf("Portland Path Finder\n");
-	printf("Enter the city you're starting from and the city you're trying to get to and get the path between them.\n");
-	input(root, start, end, cityListRoot);
+        printf("\n|-------------------------------------------------|\n");
+	printf("|Portland Route Finder                            |\n");
+	printf("|Given a starting city and a destination,         |\n");
+	printf("|this program will return a route between them.   |\n");
+        printf("|-------------------------------------------------|\n\n");
+        input(root, start, end, cityListRoot);
 	pathSearch(root, start, end, &route); //find route from start to end
 	printRoute(route, start, end);
 }
