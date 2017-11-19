@@ -172,7 +172,7 @@ int citySearch(char name[], city *c, jct *root)
 	char initialCity[MAX_NAME]; // starting city
 	city *search; //city to be searched
 	jct *currentJunction; //current junction node
-	//setting break condiiton
+	//setting break condition
 	currentJunction = root->nextJCT;
 	search = currentJunction->nextCity;
 	strcpy(initialCity, search->name);
