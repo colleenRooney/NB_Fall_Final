@@ -25,10 +25,15 @@ void main(void)
 
 	//run functions
 	createMap(root);
-	printf("Portland Path Finder\n");
-	printf("Enter the city you're starting from and the city you're trying to get to and get the path between them.\n");
+	//program introduction for user
+    printf("\n|-----------------------------------------------------------------|\n");
+	printf("|Portland Route Finder                                 _____      |\n");
+	printf("|Given a starting city and a destination,          __ /__||_\\__   |\n");
+	printf("|this program will return a route between them.   |_( )____( )_|  |\n");
+    printf("|-----------------------------------------------------------------|\n\n");
+
+    //run functions
 	input(root, start, end, cityListRoot);
 	makePath(root, start, end, route);
-//	pathSearch(root, start, end, &route); //find route from start to end
 	printRoute(route, start, end);
 }
