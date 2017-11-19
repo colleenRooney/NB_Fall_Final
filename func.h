@@ -73,7 +73,7 @@ void createMap(jct *root)
 
 		//reading city names from file into city nodes
 		fgets(cityName, MAX_NAME, fp);
-		removeEnd(cityName);
+		sanitizeInput(cityName);
 		while(strcmp(cityName, "*") != 0) // The * denotes end of file
 		{
 			n = malloc(sizeof(city));
@@ -92,7 +92,7 @@ void createMap(jct *root)
 			}
 			lastcity = n;
 			fgets(cityName, MAX_NAME, fp);
-			removeEnd(cityName);
+			sanitizeInput(cityName);
 		}
 		j=0;
 		fclose(fp);
