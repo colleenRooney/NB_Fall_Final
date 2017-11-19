@@ -43,10 +43,10 @@ void createMap(jct *root)
 	//variables
 	char cityName[MAX_NAME];
 	char directionIndicator[10];
-	city *n, *lastcity;
+	city *newCity, *lastcity;
 	jct *last,*curr, *firstjct;
-	int count = 0;
-	int j = 0;
+	int positionIndicator = 0;
+	int firstCity = 0;
 
 	FILE *fp;
 
@@ -83,28 +83,28 @@ void createMap(jct *root)
 		sanitizeInput(cityName);
 		while(strcmp(cityName, "*") != 0) // The * denotes end of file
 		{
-			count++;
-			n = malloc(sizeof(city));
-			n->next = NULL;
-			n->prev = NULL;
-			n->position = count;
-			strcpy(n->name, cityName);
-			if(j == 0)//connecting first city to the junction
+			positionIndicator++;
+			newCity = malloc(sizeof(city));
+			newCity->next = NULL;
+			newCity->prev = NULL;
+			newCity->position = positionIndicator;
+			strcpy(newCity->name, cityName);
+			if(firstCity == 0)//connecting first city to the junction
 			{
-				curr->nextCity = n;
-				j++;
+				curr->nextCity = newCity;
+				firstCity++;
 			}
 			else//for rest of cities in list
 			{
-				lastcity->next = n;
-				n->prev = lastcity;
+				lastcity->next = newCity;
+				newCity->prev = lastcity;
 			}
-			lastcity = n;
+			lastcity = newCity;
 			fgets(cityName, MAX_NAME, fp);
 			sanitizeInput(cityName);
 		}
-		count=0; //reseting variables for next read
-		j=0;
+		count = 0; //reseting variables for next read
+		firstCity = 0;
 		fclose(fp);
 	}
 	last->nextJCT = firstjct;
@@ -120,10 +120,10 @@ int citySearch(char name[], city *c, jct *root)
 	//variables
 	char initialCity[MAX_NAME]; // starting city
 	city *search; //city to be searched
-	jct *j; //current junction node
+	jct *currentJunction; //current junction node
 	//setting break condiiton
-	j = root->nextJCT;
-	search = j->nextCity;
+	currentJunction = root->nextJCT;
+	search = currentJunction->nextCity;
 	strcpy(initialCity, search->name);
 
 	while(1)
@@ -134,14 +134,14 @@ int citySearch(char name[], city *c, jct *root)
 			c->next = search->next;
 			c->prev = search->prev;
 			c->position = search->position;
-			strcpy(c->direction, j->direction);
+			strcpy(c->direction, currentJunction->direction);
 			return 1;
 		}
 
 		if(search->next == NULL) //if at the end of a branch go to next junction branch
 		{
-			j = j->nextJCT;
-			search = j->nextCity;
+			currentJunction = currentJunction->nextJCT;
+			search = currentJunction->nextCity;
 			if(strcmp(search->name, initialCity) == 0) //checks to see if at original branch, if so exits
 			{
 				printf("City does not exist in map.\n");

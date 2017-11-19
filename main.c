@@ -22,9 +22,8 @@ void main(void)
 	root->nextCity = NULL;
 	root->nextJCT = NULL;
 	cityListRoot = root;
-
-	//run functions
 	createMap(root);
+
 	//program introduction for user
     printf("\n|-----------------------------------------------------------------|\n");
 	printf("|Portland Route Finder                                 _____      |\n");
