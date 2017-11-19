@@ -1,17 +1,35 @@
 #define FILES_TO_READ 2
 #define MAX_NAME 20
 
-/*****************************************************************
-*removeEnd
-* Replaces last char in a string with string terminator character
-********************************************************************/
-void removeEnd(char a[])
+/*********************************************\
+* sanitizeInput
+* modifies a string into a uniform structure
+\**********************************************/
+void sanitizeInput(char input[])
 {
-	int i;
-	i = strlen(a);
-	i = i-1;
-	a[i] = '\0';
+	int length = strlen(input);
+	for(int i=0;i<length;i++)
+	{
+		if(input[i] == '\n')
+		{
+			input[i] = '\0';
+		}
+		else if(i==0 || input[i-1] == 32)
+		{
+			if(input[i] >= 97 && input[i] <= 122) input[i] = input[i]-32; //Capitalize lowercase letter at start or if a new word
+		}
+		else if(input[i] == 32 && input[i+1] < 65 || input[i] > 122 || (input[i] > 90 && input[i] < 97)) 
+		{
+			input[i] = '\0'; //letter is a space and another letter does not follow, change to string terminator
+		}
+		else
+		{
+			if(input[i] >= 65 && input[i] <= 90) input[i] = input[i] + 32; //decapatilzes uppercase letters that shoudld be lower case
+		}
+	}
 }
+
+
 
 /*************************************************************
 *createMap
@@ -91,7 +109,7 @@ int citySearch(char name[], city *r, jct *root)
 {
 	//variables
 	static int check = 0; //indicator to ensure root is only moved on first search
-	char initialCity[40]; // starting city
+	char initialCity[MAX_NAME]; // starting city
 	city *search; //city to be searched
 	jct *j; //current junction node
 	//setting break condiiton
@@ -255,17 +273,13 @@ void printCityList(jct *cityListRoot)
 *********************************************/
 void input(jct *root, city *start, city *end, jct *cityListRoot) //root of the map, pointer to the starting city, pointer to the ending city
 {
-	char startingCity[40], endingCity[40];
+	char startingCity[MAX_NAME], endingCity[MAX_NAME];
 
 	while(1) //get valid starting city
 	{
 		printf("Enter the starting city(or 'citylist' for a list of available cities): ");
-		fgets(startingCity, 40, stdin);
-		removeEnd(startingCity); //removes \n char from fgets
-		if(startingCity[0] >= 97 && startingCity[0] <= 122) //capitalizes first letter
-		{
-			startingCity[0] = startingCity[0] - 32;
-		}
+		fgets(startingCity, MAX_NAME, stdin);
+		sanitizeInput(startingCity);
 
 		if(strcmp(startingCity, "Citylist") == 0) //prints out a list of cities in the map
 		{
@@ -280,13 +294,9 @@ void input(jct *root, city *start, city *end, jct *cityListRoot) //root of the m
 	while(1) //get valid ending city
 	{
 		printf("Enter the destination city: ");
-		fgets(endingCity, 40, stdin);
-		removeEnd(endingCity);
+		fgets(endingCity, MAX_NAME, stdin);
+		sanitizeInput(endingCity);
 
-		if(endingCity[0] >= 97 && endingCity[0] <= 122) //capitalizes first letter
-		{
-			 endingCity[0] = endingCity[0] - 32;
-		}
 		if(strcmp(endingCity, "Citylist") == 0)//prints out a list of cities in the map
 		{
 			printCityList(cityListRoot);
