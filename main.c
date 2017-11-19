@@ -10,8 +10,9 @@ void main(void)
 	//variables
 	city *start, *end; //s is starting city pointer, e is ending city pointer
 	jct *root, *cityListRoot;
-	STACK route; //stack holding the route information
-	createStack(&route);
+	STACK *route; //stack holding the route information
+	route = malloc(sizeof(STACK));
+	createStack(route);
 
 	//creating initial junction
 	root = malloc(sizeof(jct));
@@ -27,6 +28,7 @@ void main(void)
 	printf("Portland Path Finder\n");
 	printf("Enter the city you're starting from and the city you're trying to get to and get the path between them.\n");
 	input(root, start, end, cityListRoot);
-	pathSearch(root, start, end, &route); //find route from start to end
+	makePath(root, start, end, route);
+//	pathSearch(root, start, end, &route); //find route from start to end
 	printRoute(route, start, end);
 }

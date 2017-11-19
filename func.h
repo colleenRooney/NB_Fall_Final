@@ -1,30 +1,31 @@
+
 #define FILES_TO_READ 2
 #define MAX_NAME 20
 
 /*********************************************\
 * sanitizeInput
-* modifies a string into a uniform structure
+* modifies a string into a standard format
 \**********************************************/
 void sanitizeInput(char input[])
 {
-	int length = strlen(input);
+	int length=strlen(input);
 	for(int i=0;i<length;i++)
 	{
-		if(input[i] == '\n')
+		if(input[i]=='\n')
 		{
-			input[i] = '\0';
+			input[i]='\0';
 		}
-		else if(i==0 || input[i-1] == 32)
+		else if(i==0 || input[i-1]==32)
 		{
-			if(input[i] >= 97 && input[i] <= 122) input[i] = input[i]-32; //Capitalize lowercase letter at start or if a new word
+			if(input[i]>=97 && input[i]<=122) input[i]=input[i]-32; //Capitalize lowercase letter at start or if a new word
 		}
-		else if(input[i] == 32 && input[i+1] < 65 || input[i] > 122 || (input[i] > 90 && input[i] < 97)) 
+		else if(input[i]==32 && input[i+1]<65 || input[i]>122 || (input[i]>90 && input[i]<97))
 		{
-			input[i] = '\0'; //letter is a space and another letter does not follow, change to string terminator
+			input[i]='\0'; //letter is a space and another letter does not follow, change to string terminator
 		}
 		else
 		{
-			if(input[i] >= 65 && input[i] <= 90) input[i] = input[i] + 32; //decapatilzes uppercase letters that shoudld be lower case
+			if(input[i]>=65 && input[i]<=90) input[i]=input[i]+32; //decapatilzes uppercase letters that shoudld be lower case
 		}
 	}
 }
@@ -41,6 +42,7 @@ void createMap(jct *root)
 {
 	//variables
 	char cityName[MAX_NAME];
+	char directionIndicator[10];
 	city *n, *lastcity;
 	jct *last,*curr, *firstjct;
 	int count = 0;
@@ -52,14 +54,19 @@ void createMap(jct *root)
 	{
 		//opening proper file
 		if(i==0) fp = fopen("north", "r");
-		else if(i==1) fp = fopen("south", "r"); 
-		else if(i==2) fp = fopen("east", "r"); 
+		else if(i==1) fp = fopen("south", "r");
+		else if(i==2) fp = fopen("east", "r");
 		else if(i==3) fp = fopen("west", "r");
 
 		//create junction node
+		fgets(directionIndicator, 10, fp);
+		sanitizeInput(directionIndicator);
+		directionIndicator[0] = directionIndicator[0]+32;
 		curr = malloc(sizeof(jct));
 		curr->nextJCT = NULL;
 		curr->nextCity = NULL;
+		strcpy(curr->direction, directionIndicator);
+
 		if(i==0) //points root to first junction
 		{
 			root->nextJCT = curr;
@@ -76,9 +83,11 @@ void createMap(jct *root)
 		sanitizeInput(cityName);
 		while(strcmp(cityName, "*") != 0) // The * denotes end of file
 		{
+			count++;
 			n = malloc(sizeof(city));
 			n->next = NULL;
 			n->prev = NULL;
+			n->position = count;
 			strcpy(n->name, cityName);
 			if(j == 0)//connecting first city to the junction
 			{
@@ -94,6 +103,7 @@ void createMap(jct *root)
 			fgets(cityName, MAX_NAME, fp);
 			sanitizeInput(cityName);
 		}
+		count=0; //reseting variables for next read
 		j=0;
 		fclose(fp);
 	}
@@ -105,10 +115,9 @@ void createMap(jct *root)
 * Takes in a city, finds it in the map, and points a pointer to it
 * returns 1 if the city is in the map, 0 if it is not
 **************************************************************************/
-int citySearch(char name[], city *r, jct *root)
+int citySearch(char name[], city *c, jct *root)
 {
 	//variables
-	static int check = 0; //indicator to ensure root is only moved on first search
 	char initialCity[MAX_NAME]; // starting city
 	city *search; //city to be searched
 	jct *j; //current junction node
@@ -121,14 +130,11 @@ int citySearch(char name[], city *r, jct *root)
 	{
 		if(strcmp(name, search->name) == 0) //checks for break condition
 		{
-			strcpy(r->name, search->name); //sets incoming pointer to the current city node
-			r->next = search->next;
-			r->prev = search->prev;
-			if( check == 0)
-			{
-				root->nextJCT = j;
-				check++;
-			}
+			strcpy(c->name, search->name); //sets incoming pointer to the current city node
+			c->next = search->next;
+			c->prev = search->prev;
+			c->position = search->position;
+			strcpy(c->direction, j->direction);
 			return 1;
 		}
 
@@ -146,85 +152,62 @@ int citySearch(char name[], city *r, jct *root)
 	}
 }
 
-/**********************************************************************
-*pathSearch
-* finds a route from the starting city to an ending city
-* returns an int for how many steps between the start and end for
-* use in the path array
-***********************************************************************/
-void pathSearch(jct *root, city *s, city *end, STACK *c)
+/******************************************
+* makePath
+* determines state from direction and
+* position values of start and end and
+* loads a stack with the path
+******************************************/
+void makePath(jct *root, city *start, city *end, STACK *route)
 {
-	STACK o;
-	createStack(&o);
-	int i = 0;int z = 0;
-	int count = 0;
-	city *search;
-	jct *j;
-	j = root->nextJCT;
-	STACK_ELEMENT temp;
-	search = s;
-	Push(&o, s->name);
-	while(1)
-	{
-		if(strcmp(search->name, end->name) == 0) //found the end city
-		{
-			c->head = o.head;
-			return;
-		}
-		else if(search->next == NULL) //end of the branch
-		{
-			switch(z){
-			case 0: //for the first search that involves the branch with the starting city
-				while(1) //Popping cities off stack until we reach the start
-				{
-					temp = Peek(&o);
-					if(strcmp(s->name, temp.name) != 0)
-					{
-						temp = Pop(&o);
-					}
-					else break;
-				}
-				search = s; //go back to start
-				while(search->prev != NULL)
-				{
-					search = search->prev;
-					Push(&o, search->name);
-					if(strcmp(search->name, end->name) == 0) //found the end city
-					{
-						c->head = o.head;
-						return;
-					}
-				}
+    jct *j = root->nextJCT;
+    city *current;
+    current = end;
+    Push(route, current->name); //push end city onto stack
 
-				Push(&o, "i5/Hwy_26 junction");
-				j = j->nextJCT;
-				search = j->nextCity;
-				Push(&o, search->name);
-				z = 1;
-				break;
+    while(strcmp(j->direction, start->direction) != 0)//finding the start junction
+    {
+        j = j->nextJCT;
+    }
 
-			case 1: //for reversing up a branch
-				while(search->prev != NULL)
-				{
-				    temp = Pop(&o);
-				    search = search->prev;
-				}
-				Pop(&o);
-				j = j->nextJCT;
-				search = j->nextCity;
-				Push(&o, search->name);
-				break;
-			}
-		}
+    if(strcmp(start->direction, end->direction) != 0) //cities on different branches
+    {
+        while(current->prev != NULL)
+        {
+            current = current->prev;
+            Push(route, current->name);
+        }
 
-		else //moving from city to city
-		{
-			search = search->next;
-			Push(&o, search->name);
-		}
-	}
+        current = j->nextCity;
+
+        while(strcmp(current->name, start->name) != 0)
+        {
+            Push(route, current->name);
+            current = current->next;
+        }
+
+        Push(route, current->name);
+    }
+
+	else if(start->position > end->position) //same branch, start is further down than end
+    {
+        while(strcmp(current->name, start->name) != 0)
+        {
+            current = current->next;
+            Push(route, current->name);
+        }
+    }
+
+    else //start is further up than end
+    {
+        while(strcmp(current->name, start->name) != 0)
+        {
+            current = current->prev;
+            Push(route, current->name);
+        }
+    }
+    return;
 }
-
 /********************************************
 *printCityList
 * Prints our a list of available cities
@@ -287,7 +270,6 @@ void input(jct *root, city *start, city *end, jct *cityListRoot) //root of the m
 		}
 		else if(citySearch(startingCity, start, root) == 1) //checks if city exists in the map, if true then sets starting city and returns
 		{
-			strcpy(start->name, startingCity);
 			break;
 		}
 	}
@@ -307,33 +289,25 @@ void input(jct *root, city *start, city *end, jct *cityListRoot) //root of the m
 		}
 		else if(citySearch(endingCity, end, root) == 1)//checks if city exists in the map, if true sets the ending city and returns
 		{
-			strcpy(end->name, endingCity);
 			break;
 		}
 	}
 }
-
-void printRoute(STACK orig, city *start, city *end)
+/****************************************
+* printRoute
+* Pops elements from a stack and prints.
+******************************************/
+void printRoute(STACK *route, city *start, city *end)
 {
-	STACK reverse;
-	createStack(&reverse);
 	STACK_ELEMENT temp;
-	temp = Peek(&orig);
-	int i =0;
-	while(strcmp(temp.name, start->name) != 0)  //Popping items from original stack to reversed stack
-	{
-		i++;
-		temp = Pop(&orig);
-    		Push(&reverse, temp.name);
-   	}
-	temp = Pop(&reverse);
+	temp = Pop(route);
 
 	printf("\nYour route is: ");
+
  	while(strcmp(temp.name, end->name) != 0)    //printing out the STACK in order
 	{
 		printf("%s to ", temp.name);
-		temp = Pop(&reverse);
-		//if(strcmp(temp.name, "North Portland") == 0 || strcmp(temp.name, "South Portland") == 0))
+		temp = Pop(route);
 	}
 
 	printf("%s.\n\n", temp.name);
