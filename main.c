@@ -13,7 +13,7 @@ void main(void)
 	STACK *route; //stack holding the route information
 	route = malloc(sizeof(STACK));
 	createStack(route);
-
+	char cont = 'y'; //check whether to loop program
 	//creating initial junction
 	root = malloc(sizeof(jct));
 	cityListRoot = malloc(sizeof(jct));
@@ -32,7 +32,13 @@ void main(void)
     printf("|-----------------------------------------------------------------|\n\n");
 
     //run functions
-	input(root, start, end, cityListRoot);
-	makePath(root, start, end, route);
-	printRoute(route, start, end);
+	while(cont != 'n')
+	{
+		input(root, start, end, cityListRoot);
+		makePath(root, start, end, route);
+		printRoute(route, start, end);
+		printf("Check another route(y/n)? ");
+		cont = getchar();
+		getchar();
+	}
 }

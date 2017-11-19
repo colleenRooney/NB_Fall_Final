@@ -103,7 +103,7 @@ void createMap(jct *root)
 			fgets(cityName, MAX_NAME, fp);
 			sanitizeInput(cityName);
 		}
-		count = 0; //reseting variables for next read
+		positionIndicator = 0; //reseting variables for next read
 		firstCity = 0;
 		fclose(fp);
 	}
@@ -178,7 +178,7 @@ void makePath(jct *root, city *start, city *end, STACK *route)
             Push(route, current->name);
         }
 
-        current = j->nextCity;
+        current = currentJunction->nextCity;
 
         while(strcmp(current->name, start->name) != 0)
         {
@@ -275,7 +275,7 @@ void input(jct *root, city *start, city *end, jct *cityListRoot) //root of the m
 	}
 	while(1) //get valid ending city
 	{
-		printf("Enter the destination city: ");
+		printf("Enter the destination city(or 'citylist' for a list of available cities): ");
 		fgets(endingCity, MAX_NAME, stdin);
 		sanitizeInput(endingCity);
 
@@ -293,6 +293,13 @@ void input(jct *root, city *start, city *end, jct *cityListRoot) //root of the m
 		}
 	}
 }
+void swapDirection(city *currentDirection)
+{
+	if(strcmp(currentDirection->direction, "north") == 0) strcpy(currentDirection->direction, "south");
+	else if(strcmp(currentDirection->direction, "south") == 0) strcpy(currentDirection->direction, "north");
+	else if(strcmp(currentDirection->direction, "east") == 0) strcpy(currentDirection->direction, "west");
+	else if(strcmp(currentDirection->direction, "west") == 0) strcpy(currentDirection->direction, "east");
+}
 /****************************************
 * printRoute
 * Pops elements from a stack and prints.
@@ -301,15 +308,25 @@ void printRoute(STACK *route, city *start, city *end)
 {
 	STACK_ELEMENT temp;
 	temp = Pop(route);
+	city *currentDirection;
+	char highway[10];
 
-	printf("\nYour route is: ");
+	strcpy(currentDirection->direction, start->direction);
+	if(strcmp(start->direction, "north") == 0 || strcmp(start->direction, "south") == 0) strcpy(highway, "Interstate 5");
+	else if(strcmp(start->direction, "east") == 0 || strcmp(start->direction, "west") == 0) strcpy(highway, "Highway 26");
+
+	if(strcmp(start->direction, end->direction) != 0 || start->position > end->position) // if we are moving closer to the junction, reverse the direction of the branch
+	{
+		swapDirection(currentDirection);
+	}
+	printf("\nHeading %s out of %s on %s... ", currentDirection->direction, temp.name, highway);
 
  	while(strcmp(temp.name, end->name) != 0)    //printing out the STACK in order
 	{
-		printf("%s to ", temp.name);
+		printf("passing %s... ", temp.name);
 		temp = Pop(route);
 	}
 
-	printf("%s.\n\n", temp.name);
+	printf("arrived at %s.\n\n", temp.name);
 	return;
 }
