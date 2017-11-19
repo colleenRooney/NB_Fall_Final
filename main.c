@@ -37,8 +37,12 @@ void main(void)
 		input(root, start, end, cityListRoot);
 		makePath(root, start, end, route);
 		printRoute(route, start, end);
-		printf("Check another route(y/n)? ");
-		cont = getchar();
-		getchar();
+		while(1)
+		{
+			printf("Check another route(y/n)? ");
+			cont = getchar();
+			getchar();
+			if(cont == 'y' || cont == 'n') break;
+		}
 	}
 }

@@ -1,5 +1,4 @@
-
-#define FILES_TO_READ 2
+#define FILES_TO_READ 4
 #define MAX_NAME 20
 
 /*********************************************\
@@ -178,6 +177,7 @@ void makePath(jct *root, city *start, city *end, STACK *route)
             Push(route, current->name);
         }
 
+		Push(route, "junction");
         current = currentJunction->nextCity;
 
         while(strcmp(current->name, start->name) != 0)
@@ -206,6 +206,7 @@ void makePath(jct *root, city *start, city *end, STACK *route)
             Push(route, current->name);
         }
     }
+
     return;
 }
 /********************************************
@@ -293,6 +294,10 @@ void input(jct *root, city *start, city *end, jct *cityListRoot) //root of the m
 		}
 	}
 }
+/**********************************
+* swapDirection
+* Swaps cardinal directions
+***********************************/
 void swapDirection(city *currentDirection)
 {
 	if(strcmp(currentDirection->direction, "north") == 0) strcpy(currentDirection->direction, "south");
@@ -300,6 +305,7 @@ void swapDirection(city *currentDirection)
 	else if(strcmp(currentDirection->direction, "east") == 0) strcpy(currentDirection->direction, "west");
 	else if(strcmp(currentDirection->direction, "west") == 0) strcpy(currentDirection->direction, "east");
 }
+
 /****************************************
 * printRoute
 * Pops elements from a stack and prints.
@@ -312,6 +318,7 @@ void printRoute(STACK *route, city *start, city *end)
 	char highway[10];
 
 	strcpy(currentDirection->direction, start->direction);
+
 	if(strcmp(start->direction, "north") == 0 || strcmp(start->direction, "south") == 0) strcpy(highway, "Interstate 5");
 	else if(strcmp(start->direction, "east") == 0 || strcmp(start->direction, "west") == 0) strcpy(highway, "Highway 26");
 
@@ -323,8 +330,23 @@ void printRoute(STACK *route, city *start, city *end)
 
  	while(strcmp(temp.name, end->name) != 0)    //printing out the STACK in order
 	{
-		printf("passing %s... ", temp.name);
 		temp = Pop(route);
+		if(strcmp(temp.name, "junction") != 0 && strcmp(temp.name, end->name) != 0) printf("passing %s... ", temp.name);
+
+		else if(strcmp(temp.name, "junction") == 0)
+		{
+			if(strcmp(end->direction, currentDirection->direction) == 0) //if staying on the same highway
+    		{
+        		printf("continuing %s on %s...", currentDirection->direction, highway);
+    		}
+    		else //turning onto new junction
+    		{
+        		//change highway
+        		if(strcmp(highway, "Interstate 5") == 0) strcpy(highway, "Highway 26");
+        		else strcpy(highway, "Interstate 5");
+        		printf("turning %s onto %s...", end->direction, highway);
+    		}
+		}
 	}
 
 	printf("arrived at %s.\n\n", temp.name);
