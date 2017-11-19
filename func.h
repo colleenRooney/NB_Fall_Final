@@ -160,14 +160,14 @@ int citySearch(char name[], city *c, jct *root)
 ******************************************/
 void makePath(jct *root, city *start, city *end, STACK *route)
 {
-    jct *j = root->nextJCT;
+    jct *currentJunction = root->nextJCT;
     city *current;
     current = end;
     Push(route, current->name); //push end city onto stack
 
-    while(strcmp(j->direction, start->direction) != 0)//finding the start junction
+    while(strcmp(currentJunction->direction, start->direction) != 0)//finding the start junction
     {
-        j = j->nextJCT;
+        currentJunction = currentJunction->nextJCT;
     }
 
     if(strcmp(start->direction, end->direction) != 0) //cities on different branches
@@ -215,9 +215,9 @@ void makePath(jct *root, city *start, city *end, STACK *route)
 void printCityList(jct *cityListRoot)
 {
 	city *current;
-	jct *j;
-	j = cityListRoot->nextJCT;
-	current = j->nextCity;
+	jct *currentJunction;
+	currentJunction = cityListRoot->nextJCT;
+	current = currentJunction->nextCity;
 	char breakCity[MAX_NAME];
 	strcpy(breakCity, current->name);
 	int i;
@@ -233,8 +233,8 @@ void printCityList(jct *cityListRoot)
 
 		if(current->next == NULL)
 		{
-			j = j->nextJCT;
-			current = j->nextCity;
+			currentJunction = currentJunction->nextJCT;
+			current = currentJunction->nextCity;
 		}
 		else
 		{
