@@ -1,4 +1,4 @@
-#define FILES_TO_READ 4
+#define FILES_TO_READ 2
 #define MAX_NAME 20
 
 /*********************************************\
