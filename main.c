@@ -22,13 +22,15 @@ void main(void)
 	root->nextJCT = NULL;
 	cityListRoot = root;
 
-	//run functions
-	createMap(root);
-        printf("\n|----------------------------------------------------------------|\n");
-	printf("|Portland Route Finder                                 ____      |\n");
-	printf("|Given a starting city and a destination,          __ /_||_\\__   |\n");
-	printf("|this program will return a route between them.   |_( )___( )_|  |\n");
-        printf("|----------------------------------------------------------------|\n\n");
+	//program introduction for user
+        printf("\n|-----------------------------------------------------------------|\n");
+	printf("|Portland Route Finder                                 _____      |\n");
+	printf("|Given a starting city and a destination,          __ /__||_\\__   |\n");
+	printf("|this program will return a route between them.   |_( )____( )_|  |\n");
+        printf("|-----------------------------------------------------------------|\n\n");
+
+        //run functions
+        createMap(root);
         input(root, start, end, cityListRoot);
 	pathSearch(root, start, end, &route); //find route from start to end
 	printRoute(route, start, end);
