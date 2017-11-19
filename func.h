@@ -229,7 +229,7 @@ void makePath(jct *root, city *start, city *end, STACK *route)
             Push(route, current->name);
         }
 
-		Push(route, "junction");
+	Push(route, "junction");
         current = currentJunction->nextCity;
 
         while(strcmp(current->name, start->name) != 0)
@@ -241,7 +241,7 @@ void makePath(jct *root, city *start, city *end, STACK *route)
         Push(route, current->name);
     }
 
-	else if(start->position > end->position) //same branch, start is further down than end
+    else if(start->position > end->position) //same branch, start is further down than end
     {
         while(strcmp(current->name, start->name) != 0)
         {
