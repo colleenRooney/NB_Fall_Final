@@ -213,11 +213,11 @@ void makePath(jct *root, city *start, city *end, STACK *route)
 *printCityList
 * Prints our a list of available cities
 *********************************************/
-void printCityList(jct *cityListRoot)
+void printCityList(jct *root)
 {
 	city *current;
 	jct *currentJunction;
-	currentJunction = cityListRoot->nextJCT;
+	currentJunction = root->nextJCT;
 	current = currentJunction->nextCity;
 	char breakCity[MAX_NAME];
 	strcpy(breakCity, current->name);
@@ -229,8 +229,7 @@ void printCityList(jct *cityListRoot)
 		length = strlen(current->name);
 		printf("%s", current->name);
 		for(i=0; i<(MAX_NAME-length); i++) {printf(" ");}
-		count++;
-		if(count == 2){printf("\n"); count = 0;}
+		if(count % 2 == 1) printf("\n");
 
 		if(current->next == NULL)
 		{
@@ -246,8 +245,10 @@ void printCityList(jct *cityListRoot)
 		{
 			break;
 		}
+		count++;
 	}
 	printf("\n");
+	return;
 }
 
 /********************************************
@@ -255,7 +256,7 @@ void printCityList(jct *cityListRoot)
 * Get user input, and set start
 * and ending city pointers
 *********************************************/
-void input(jct *root, city *start, city *end, jct *cityListRoot) //root of the map, pointer to the starting city, pointer to the ending city
+void input(jct *root, city *start, city *end) //root of the map, pointer to the starting city, pointer to the ending city
 {
 	char startingCity[MAX_NAME], endingCity[MAX_NAME];
 
@@ -267,7 +268,7 @@ void input(jct *root, city *start, city *end, jct *cityListRoot) //root of the m
 
 		if(strcmp(startingCity, "Citylist") == 0) //prints out a list of cities in the map
 		{
-			printCityList(cityListRoot);
+			printCityList(root);
 		}
 		else if(citySearch(startingCity, start, root) == 1) //checks if city exists in the map, if true then sets starting city and returns
 		{
@@ -282,7 +283,7 @@ void input(jct *root, city *start, city *end, jct *cityListRoot) //root of the m
 
 		if(strcmp(endingCity, "Citylist") == 0)//prints out a list of cities in the map
 		{
-			printCityList(cityListRoot);
+			printCityList(root);
 		}
 		else if(strcmp(startingCity, endingCity) == 0) //starting and ending cities cannot be the same
 		{

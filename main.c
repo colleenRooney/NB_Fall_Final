@@ -9,19 +9,17 @@ void main(void)
 {
 	//variables
 	city *start, *end; //s is starting city pointer, e is ending city pointer
-	jct *root, *cityListRoot;
+	jct *root;
 	STACK *route; //stack holding the route information
 	route = malloc(sizeof(STACK));
 	createStack(route);
 	char cont = 'y'; //check whether to loop program
 	//creating initial junction
 	root = malloc(sizeof(jct));
-	cityListRoot = malloc(sizeof(jct));
 	start = malloc(sizeof(city));
 	end = malloc(sizeof(city));
 	root->nextCity = NULL;
 	root->nextJCT = NULL;
-	cityListRoot = root;
 	createMap(root);
 
 	//program introduction for user
@@ -34,7 +32,7 @@ void main(void)
     //run functions
 	while(cont != 'n')
 	{
-		input(root, start, end, cityListRoot);
+		input(root, start, end);
 		makePath(root, start, end, route);
 		printRoute(route, start, end);
 		while(1)
