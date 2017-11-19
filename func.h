@@ -171,8 +171,12 @@ int citySearch(char name[], city *c, jct *root)
 	char initialCity[MAX_NAME]; // starting city
 	city *search; //city to be searched
 	jct *currentJunction; //current junction node
+<<<<<<< HEAD
 
 	//setting break condiiton
+=======
+	//setting break condition
+>>>>>>> 3a8849a8d8b879db81ef2ec04cd518349be34323
 	currentJunction = root->nextJCT;
 	search = currentJunction->nextCity;
 	strcpy(initialCity, search->name);
@@ -229,8 +233,13 @@ void makePath(jct *root, city *start, city *end, STACK *route)
 			Push(route, currentCity->name);
 		}
 
+<<<<<<< HEAD
 		Push(route, "junction");
 		currentCity = currentJunction->nextCity;
+=======
+	Push(route, "junction");
+        current = currentJunction->nextCity;
+>>>>>>> 3a8849a8d8b879db81ef2ec04cd518349be34323
 
 		while(strcmp(currentCity->name, start->name) != 0)
 		{
@@ -241,6 +250,7 @@ void makePath(jct *root, city *start, city *end, STACK *route)
 		Push(route, currentCity->name);
 	}
 
+<<<<<<< HEAD
 	else if(start->position > end->position) //same branch, start is further down than end
 	{
 		while(strcmp(currentCity->name, start->name) != 0)
@@ -260,6 +270,27 @@ void makePath(jct *root, city *start, city *end, STACK *route)
 	}
 
 	return;
+=======
+    else if(start->position > end->position) //same branch, start is further down than end
+    {
+        while(strcmp(current->name, start->name) != 0)
+        {
+            current = current->next;
+            Push(route, current->name);
+        }
+    }
+
+    else //start is further up than end
+    {
+        while(strcmp(current->name, start->name) != 0)
+        {
+            current = current->prev;
+            Push(route, current->name);
+        }
+    }
+
+    return;
+>>>>>>> 3a8849a8d8b879db81ef2ec04cd518349be34323
 }
 
 /********************************************
