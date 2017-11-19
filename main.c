@@ -23,13 +23,13 @@ void main(void)
 	createMap(root);
 
 	//program introduction for user
-    printf("\n|-----------------------------------------------------------------|\n");
+	printf("\n|-----------------------------------------------------------------|\n");
 	printf("|Portland Route Finder                                 _____      |\n");
 	printf("|Given a starting city and a destination,          __ /__||_\\__   |\n");
 	printf("|this program will return a route between them.   |_( )____( )_|  |\n");
-    printf("|-----------------------------------------------------------------|\n\n");
+	printf("|-----------------------------------------------------------------|\n\n");
 
-    //run functions
+	//run functions
 	while(cont != 'n')
 	{
 		input(root, start, end);
