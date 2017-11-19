@@ -6,7 +6,6 @@
 * returns true if character is a letter
 \**********************************************/
 int isaLetter(char letter) //if character is a letter return 1, else return 0
-
 {
 	if(((letter <= 122) && (letter >= 97)) || ((letter <= 90) && (letter >= 65)))
 	{
@@ -72,7 +71,7 @@ void sanitizeInput(char input[])
 		{
 			capitalize(&input[i]);
 		}
-		else if(isaSpace(input[i]) && !isaLetter(input[i+1])) //if letter is a space without a following letter
+		else if(isaSpace(input[i]) && !isaLetter(input[i+1])) //if character is a space without a following letter
 		{
 			input[i]='\0'; //terminate string
 		}
@@ -95,39 +94,39 @@ void createMap(jct *root)
 	char cityName[MAX_NAME];
 	char directionIndicator[10];
 	city *newCity, *lastcity;
-	jct *last,*curr, *firstjct;
+	jct *lastJunction, *currentJunction, *firstjct;
 	int positionIndicator = 0;
 	int firstCity = 0;
 
 	FILE *fp;
 
-	for(int i=0;i<FILES_TO_READ;i++)
+	for(int i = 0; i < FILES_TO_READ; i++)
 	{
 		//opening proper file
-		if(i==0) fp = fopen("north", "r");
-		else if(i==1) fp = fopen("south", "r");
-		else if(i==2) fp = fopen("east", "r");
-		else if(i==3) fp = fopen("west", "r");
+		if(i == 0) fp = fopen("north", "r");
+		else if(i == 1) fp = fopen("south", "r");
+		else if(i == 2) fp = fopen("east", "r");
+		else if(i == 3) fp = fopen("west", "r");
 
 		//create junction node
 		fgets(directionIndicator, 10, fp);
 		sanitizeInput(directionIndicator);
-		directionIndicator[0] = directionIndicator[0]+32;
-		curr = malloc(sizeof(jct));
-		curr->nextJCT = NULL;
-		curr->nextCity = NULL;
-		strcpy(curr->direction, directionIndicator);
+		decap(&directionIndicator[0]);
+		currentJunction = malloc(sizeof(jct));
+		currentJunction->nextJCT = NULL;
+		currentJunction->nextCity = NULL;
+		strcpy(currentJunction->direction, directionIndicator);
 
-		if(i==0) //points root to first junction
+		if(i == 0) //points root to first junction
 		{
-			root->nextJCT = curr;
-			firstjct = curr;
+			root->nextJCT = currentJunction;
+			firstjct = currentJunction;
 		}
 		else //set last junction to current junction
 		{
-			last->nextJCT = curr;
+			lastJunction->nextJCT = currentJunction;
 		}
-		last = curr; //changes junction to last junction
+		lastJunction = currentJunction; //changes junction to last junction
 
 		//reading city names from file into city nodes
 		fgets(cityName, MAX_NAME, fp);
@@ -142,7 +141,7 @@ void createMap(jct *root)
 			strcpy(newCity->name, cityName);
 			if(firstCity == 0)//connecting first city to the junction
 			{
-				curr->nextCity = newCity;
+				currentJunction->nextCity = newCity;
 				firstCity++;
 			}
 			else//for rest of cities in list
@@ -158,7 +157,7 @@ void createMap(jct *root)
 		firstCity = 0;
 		fclose(fp);
 	}
-	last->nextJCT = firstjct;
+	lastJunction->nextJCT = firstjct;
 }
 
 /*************************************************************************
@@ -172,6 +171,7 @@ int citySearch(char name[], city *c, jct *root)
 	char initialCity[MAX_NAME]; // starting city
 	city *search; //city to be searched
 	jct *currentJunction; //current junction node
+
 	//setting break condiiton
 	currentJunction = root->nextJCT;
 	search = currentJunction->nextCity;
@@ -204,96 +204,97 @@ int citySearch(char name[], city *c, jct *root)
 }
 
 /******************************************
-* makePath
+*makePath
 * determines state from direction and
 * position values of start and end and
 * loads a stack with the path
 ******************************************/
 void makePath(jct *root, city *start, city *end, STACK *route)
 {
-    jct *currentJunction = root->nextJCT;
-    city *current;
-    current = end;
-    Push(route, current->name); //push end city onto stack
+	jct *currentJunction = root->nextJCT;
+	city *currentCity;
+	currentCity = end;
+	Push(route, currentCity->name); //push end city onto stack
 
-    while(strcmp(currentJunction->direction, start->direction) != 0)//finding the start junction
-    {
-        currentJunction = currentJunction->nextJCT;
-    }
+	while(strcmp(currentJunction->direction, start->direction) != 0)//finding the start junction
+	{
+		currentJunction = currentJunction->nextJCT;
+	}
 
-    if(strcmp(start->direction, end->direction) != 0) //cities on different branches
-    {
-        while(current->prev != NULL)
-        {
-            current = current->prev;
-            Push(route, current->name);
-        }
+	if(strcmp(start->direction, end->direction) != 0) //cities on different branches
+	{
+		while(currentCity->prev != NULL)
+		{
+			currentCity = currentCity->prev;
+			Push(route, currentCity->name);
+		}
 
 		Push(route, "junction");
-        current = currentJunction->nextCity;
+		currentCity = currentJunction->nextCity;
 
-        while(strcmp(current->name, start->name) != 0)
-        {
-            Push(route, current->name);
-            current = current->next;
-        }
+		while(strcmp(currentCity->name, start->name) != 0)
+		{
+			Push(route, currentCity->name);
+			currentCity = currentCity->next;
+		}
 
-        Push(route, current->name);
-    }
+		Push(route, currentCity->name);
+	}
 
 	else if(start->position > end->position) //same branch, start is further down than end
-    {
-        while(strcmp(current->name, start->name) != 0)
-        {
-            current = current->next;
-            Push(route, current->name);
-        }
-    }
+	{
+		while(strcmp(currentCity->name, start->name) != 0)
+		{
+			currentCity = currentCity->next;
+			Push(route, currentCity->name);
+		}
+	}
 
-    else //start is further up than end
-    {
-        while(strcmp(current->name, start->name) != 0)
-        {
-            current = current->prev;
-            Push(route, current->name);
-        }
-    }
+	else //start is further up than end
+	{
+		while(strcmp(currentCity->name, start->name) != 0)
+		{
+			currentCity = currentCity->prev;
+			Push(route, currentCity->name);
+		}
+	}
 
-    return;
+	return;
 }
+
 /********************************************
 *printCityList
 * Prints our a list of available cities
 *********************************************/
 void printCityList(jct *root)
 {
-	city *current;
+	city *currentCity;
 	jct *currentJunction;
 	currentJunction = root->nextJCT;
-	current = currentJunction->nextCity;
+	currentCity = currentJunction->nextCity;
 	char breakCity[MAX_NAME];
-	strcpy(breakCity, current->name);
+	strcpy(breakCity, currentCity->name); //sets break condition for loop
 	int i;
 	int length;
 	int count = 0;
 	while(1)
 	{
-		length = strlen(current->name);
-		printf("%s", current->name);
-		for(i=0; i<(MAX_NAME-length); i++) {printf(" ");}
-		if(count % 2 == 1) printf("\n");
+		length = strlen(currentCity->name);
+		printf("%s", currentCity->name);
+		for(i = 0; i < (MAX_NAME - length); i++) printf(" "); //provides even spacing by accounting for name length
+		if(count % 2 == 1) printf("\n"); //formats printing into two columns
 
-		if(current->next == NULL)
+		if(currentCity->next == NULL) //end of branch
 		{
 			currentJunction = currentJunction->nextJCT;
-			current = currentJunction->nextCity;
+			currentCity = currentJunction->nextCity;
 		}
-		else
+		else //traverse branch
 		{
-			current = current->next;
+			currentCity = currentCity->next;
 		}
 
-		if(strcmp(current->name, breakCity) == 0)
+		if(strcmp(currentCity->name, breakCity) == 0) //traversed all possible cities
 		{
 			break;
 		}
@@ -322,7 +323,7 @@ void input(jct *root, city *start, city *end) //root of the map, pointer to the 
 		{
 			printCityList(root);
 		}
-		else if(citySearch(startingCity, start, root) == 1) //checks if city exists in the map, if true then sets starting city and returns
+		else if(citySearch(startingCity, start, root) == 1) //if city exists in the map sets starting city and returns
 		{
 			break;
 		}
@@ -347,9 +348,10 @@ void input(jct *root, city *start, city *end) //root of the map, pointer to the 
 		}
 	}
 }
+
 /**********************************
-* swapDirection
-* Swaps cardinal directions
+*swapDirection
+* swaps cardinal directions
 ***********************************/
 void swapDirection(city *currentDirection)
 {
@@ -360,7 +362,7 @@ void swapDirection(city *currentDirection)
 }
 
 /****************************************
-* printRoute
+*printRoute
 * Pops elements from a stack and prints.
 ******************************************/
 void printRoute(STACK *route, city *start, city *end)
@@ -375,29 +377,31 @@ void printRoute(STACK *route, city *start, city *end)
 	if(strcmp(start->direction, "north") == 0 || strcmp(start->direction, "south") == 0) strcpy(highway, "Interstate 5");
 	else if(strcmp(start->direction, "east") == 0 || strcmp(start->direction, "west") == 0) strcpy(highway, "Highway 26");
 
-	if(strcmp(start->direction, end->direction) != 0 || start->position > end->position) // if we are moving closer to the junction, reverse the direction of the branch
+	if(strcmp(start->direction, end->direction) != 0 || start->position > end->position) //if moving towards to the junction
 	{
-		swapDirection(currentDirection);
+		swapDirection(currentDirection); //correct for direction of movement
 	}
 	printf("\nHeading %s out of %s on %s... ", currentDirection->direction, temp.name, highway);
 
  	while(strcmp(temp.name, end->name) != 0)    //printing out the STACK in order
 	{
 		temp = Pop(route);
-		if(strcmp(temp.name, "junction") != 0 && strcmp(temp.name, end->name) != 0) printf("passing %s... ", temp.name); //don't print junction or last element
-
+		if(strcmp(temp.name, "junction") != 0 && strcmp(temp.name, end->name) != 0)  //don't print junction or last element
+		{
+			printf("passing %s... ", temp.name);
+		}
 		else if(strcmp(temp.name, "junction") == 0) //moving between branches, might change onto different highway
 		{
 			if(strcmp(end->direction, currentDirection->direction) == 0) //if staying on the same highway
-    		{
-        		printf("continuing %s on %s...", currentDirection->direction, highway);
-    		}
-    		else //turning onto new highway
-    		{
-        		if(strcmp(highway, "Interstate 5") == 0) strcpy(highway, "Highway 26");
-        		else strcpy(highway, "Interstate 5");
-        		printf("turning %s onto %s...", end->direction, highway);
-    		}
+    			{
+        			printf("continuing %s on %s...", currentDirection->direction, highway);
+    			}
+    			else //turning onto new highway
+    			{
+        			if(strcmp(highway, "Interstate 5") == 0) strcpy(highway, "Highway 26");
+        			else strcpy(highway, "Interstate 5");
+        			printf("turning %s onto %s...", end->direction, highway);
+    			}
 		}
 	}
 
