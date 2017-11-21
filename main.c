@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "def.h"
+#include "definitions.h"
 #include "stack.h"
 #include "func.h"
 

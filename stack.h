@@ -40,9 +40,12 @@ void Push(STACK *s, char cityName[])
 struct STACK_ELEMENT Pop(STACK *s)
 {
 	STACK_ELEMENT *temp;
+	STACK_ELEMENT p;
 	temp = s->head;
+	p = *temp;
 	s->head = s->head->prev;
-	return *temp;
+	free(temp);
+	return p;
 }
 
 /***********************************************
