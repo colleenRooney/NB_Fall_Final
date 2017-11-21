@@ -4,9 +4,6 @@
 #include "definitions.h"
 #include "stack.h"
 
-#define FILES_TO_READ 4
-#define MAX_NAME 20
-
 /*********************************************\
 *isaLetter
 * returns true if character is a letter

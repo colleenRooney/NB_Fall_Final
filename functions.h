@@ -3,6 +3,7 @@
 
 #include "definitions.h"
 #include "stack.h"
+
 //function prototypes
 int isaLetter(char letter);
 int isaSpace(char letter);

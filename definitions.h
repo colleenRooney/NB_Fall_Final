@@ -1,6 +1,9 @@
 #ifndef _DEFINITIONS_H
 #define _DEFINITIONS_H
 
+#define FILES_TO_READ 4
+#define MAX_NAME 20
+
 typedef struct city { //stores city info
     char name[20];
 	char direction[20];
