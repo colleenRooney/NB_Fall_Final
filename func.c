@@ -115,6 +115,7 @@ void createMap(junction *root)
 		fgets(directionIndicator, MAX_LENGTH, fp);
 		sanitizeInput(directionIndicator);
 		decap(&directionIndicator[0]);
+
 		currentJunction = malloc(sizeof(junction));
 		currentJunction->nextJunction = NULL;
 		currentJunction->nextCity = NULL;
@@ -123,7 +124,6 @@ void createMap(junction *root)
 		if(i == 0) //points root to first junction
 		{
 			root->nextJunction = currentJunction;
-			firstJunction = currentJunction;
 		}
 		else //set last junction to current junction
 		{
@@ -154,15 +154,17 @@ void createMap(junction *root)
 				lastcity->next = newCity;
 				newCity->prev = lastcity;
 			}
+
 			lastcity = newCity;
 			fgets(cityName, MAX_LENGTH, fp);
 			sanitizeInput(cityName);
 		}
-		positionIndicator = 0; //reseting variables for next read
+
+		positionIndicator = 0; //reseting variables for next file read
 		firstCity = 0;
 		fclose(fp);
 	}
-	lastJunction->nextJunction = firstJunction;
+	lastJunction->nextJunction = firstJunction; //connects junction loop
 }
 
 /*************************************************************************
