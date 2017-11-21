@@ -11,25 +11,25 @@ typedef struct STACK {
 *createStack
 * creates a new stack
 ******************************/
-void createStack(STACK *r)
+void createStack(STACK *s)
 {
 	STACK_ELEMENT *head = malloc(sizeof(STACK_ELEMENT));
 	head->prev = NULL;
 	strcpy(head->name, "END OF THE LINE");
-	r->head = head;
+	s->head = head;
 	return;
 }
 /********************************************
 *push
 * pushs an item onto the STACK stack
 *********************************************/
-void Push(STACK *r, char cityName[])
+void Push(STACK *s, char cityName[])
 {
 	STACK_ELEMENT *temp;
-	temp = r->head;
-	r->head = malloc(sizeof(STACK_ELEMENT));
-	strcpy(r->head->name, cityName);
-	r->head->prev = temp;
+	temp = s->head;
+	s->head = malloc(sizeof(STACK_ELEMENT));
+	strcpy(s->head->name, cityName);
+	s->head->prev = temp;
 	return;
 }
 
@@ -37,11 +37,11 @@ void Push(STACK *r, char cityName[])
 *pop
 * returns last item off the stack
 *************************************/
-struct STACK_ELEMENT Pop(STACK *r)
+struct STACK_ELEMENT Pop(STACK *s)
 {
 	STACK_ELEMENT *temp;
-	temp = r->head;
-	r->head = r->head->prev;
+	temp = s->head;
+	s->head = s->head->prev;
 	return *temp;
 }
 
@@ -49,8 +49,8 @@ struct STACK_ELEMENT Pop(STACK *r)
 *peek
 * returns top  item without destruction
 ************************************************/
-struct STACK_ELEMENT Peek(STACK *r)
+struct STACK_ELEMENT Peek(STACK *s)
 {
-	return *(r->head);
+	return *(s->head);
 }
 
