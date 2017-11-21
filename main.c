@@ -1,25 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "definitions.h"
-#include "stack.h"
-#include "func.h"
+//#include "definitions.h"
+#include "functions.h"
 
 void main(void)
 {
 	//variables
 	city *start, *end; //s is starting city pointer, e is ending city pointer
-	jct *root;
+	junction *root;
 	STACK *route; //stack holding the route information
 	route = malloc(sizeof(STACK));
 	createStack(route);
 	char cont = 'y'; //check whether to loop program
 	//creating initial junction
-	root = malloc(sizeof(jct));
+	root = malloc(sizeof(junction));
 	start = malloc(sizeof(city));
 	end = malloc(sizeof(city));
 	root->nextCity = NULL;
-	root->nextJCT = NULL;
+	root->nextJunction = NULL;
 	createMap(root);
 
 	//program introduction for user
@@ -32,7 +31,7 @@ void main(void)
 	//run functions
 	while(cont != 'n')
 	{
-		input(root, start, end);
+		userInput(root, start, end);
 		makePath(root, start, end, route);
 		printRoute(route, start, end);
 		while(1)

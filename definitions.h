@@ -1,3 +1,6 @@
+#ifndef _DEFINITIONS_H
+#define _DEFINITIONS_H
+
 typedef struct city { //stores city info
     char name[20];
 	char direction[20];
@@ -6,9 +9,11 @@ typedef struct city { //stores city info
     struct city *prev;
     } city;
 
-typedef struct jct { //stores junction info
+typedef struct junction { //stores junction info
     char name[10];
     city *nextCity;
 	char direction[10];
-    struct jct *nextJCT;
-    } jct;
+    struct junction *nextJunction;
+    } junction;
+
+#endif

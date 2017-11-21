@@ -1,3 +1,9 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "definitions.h"
+#include "stack.h"
+
 #define FILES_TO_READ 4
 #define MAX_NAME 20
 
@@ -88,13 +94,13 @@ void sanitizeInput(char input[])
 * map must be north most cities -> south most cities
 * a junction Hwy_26 seperator is needed
 *************************************************************/
-void createMap(jct *root)
+void createMap(junction *root)
 {
 	//variables
 	char cityName[MAX_NAME];
 	char directionIndicator[10];
 	city *newCity, *lastcity;
-	jct *lastJunction, *currentJunction, *firstjct;
+	junction *lastJunction, *currentJunction, *firstJunction;
 	int positionIndicator = 0;
 	int firstCity = 0;
 
@@ -112,19 +118,19 @@ void createMap(jct *root)
 		fgets(directionIndicator, 10, fp);
 		sanitizeInput(directionIndicator);
 		decap(&directionIndicator[0]);
-		currentJunction = malloc(sizeof(jct));
-		currentJunction->nextJCT = NULL;
+		currentJunction = malloc(sizeof(junction));
+		currentJunction->nextJunction = NULL;
 		currentJunction->nextCity = NULL;
 		strcpy(currentJunction->direction, directionIndicator);
 
 		if(i == 0) //points root to first junction
 		{
-			root->nextJCT = currentJunction;
-			firstjct = currentJunction;
+			root->nextJunction = currentJunction;
+			firstJunction = currentJunction;
 		}
 		else //set last junction to current junction
 		{
-			lastJunction->nextJCT = currentJunction;
+			lastJunction->nextJunction = currentJunction;
 		}
 		lastJunction = currentJunction; //changes junction to last junction
 
@@ -157,7 +163,7 @@ void createMap(jct *root)
 		firstCity = 0;
 		fclose(fp);
 	}
-	lastJunction->nextJCT = firstjct;
+	lastJunction->nextJunction = firstJunction;
 }
 
 /*************************************************************************
@@ -165,15 +171,15 @@ void createMap(jct *root)
 * Takes in a city, finds it in the map, and points a pointer to it
 * returns 1 if the city is in the map, 0 if it is not
 **************************************************************************/
-int citySearch(char name[], city *c, jct *root)
+int citySearch(char name[], city *c, junction *root)
 {
 	//variables
 	char initialCity[MAX_NAME]; // starting city
 	city *search; //city to be searched
-	jct *currentJunction; //current junction node
+	junction *currentJunction; //current junction node
 
 	//setting break condition
-	currentJunction = root->nextJCT;
+	currentJunction = root->nextJunction;
 	search = currentJunction->nextCity;
 	strcpy(initialCity, search->name);
 
@@ -191,7 +197,7 @@ int citySearch(char name[], city *c, jct *root)
 
 		if(search->next == NULL) //if at the end of a branch go to next junction branch
 		{
-			currentJunction = currentJunction->nextJCT;
+			currentJunction = currentJunction->nextJunction;
 			search = currentJunction->nextCity;
 			if(strcmp(search->name, initialCity) == 0) //checks to see if at original branch, if so exits
 			{
@@ -209,16 +215,16 @@ int citySearch(char name[], city *c, jct *root)
 * position values of start and end and
 * loads a stack with the path
 ******************************************/
-void makePath(jct *root, city *start, city *end, STACK *route)
+void makePath(junction *root, city *start, city *end, STACK *route)
 {
-	jct *currentJunction = root->nextJCT;
+	junction *currentJunction = root->nextJunction;
 	city *currentCity;
 	currentCity = end;
 	Push(route, currentCity->name); //push end city onto stack
 
 	while(strcmp(currentJunction->direction, start->direction) != 0)//finding the start junction
 	{
-		currentJunction = currentJunction->nextJCT;
+		currentJunction = currentJunction->nextJunction;
 	}
 
 	if(strcmp(start->direction, end->direction) != 0) //cities on different branches
@@ -266,11 +272,11 @@ void makePath(jct *root, city *start, city *end, STACK *route)
 *printCityList
 * Prints our a list of available cities
 *********************************************/
-void printCityList(jct *root)
+void printCityList(junction *root)
 {
 	city *currentCity;
-	jct *currentJunction;
-	currentJunction = root->nextJCT;
+	junction *currentJunction;
+	currentJunction = root->nextJunction;
 	currentCity = currentJunction->nextCity;
 	char breakCity[MAX_NAME];
 	strcpy(breakCity, currentCity->name); //sets break condition for loop
@@ -286,7 +292,7 @@ void printCityList(jct *root)
 
 		if(currentCity->next == NULL) //end of branch
 		{
-			currentJunction = currentJunction->nextJCT;
+			currentJunction = currentJunction->nextJunction;
 			currentCity = currentJunction->nextCity;
 		}
 		else //traverse branch
@@ -309,7 +315,7 @@ void printCityList(jct *root)
 * Get user input, and set start
 * and ending city pointers
 *********************************************/
-void input(jct *root, city *start, city *end) //root of the map, pointer to the starting city, pointer to the ending city
+void userInput(junction *root, city *start, city *end) //root of the map, pointer to the starting city, pointer to the ending city
 {
 	char startingCity[MAX_NAME], endingCity[MAX_NAME];
 
