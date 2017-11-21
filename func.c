@@ -36,7 +36,7 @@ int isaSpace(char letter)
 \**********************************************/
 void decap(char *letter) //function returns lowercase equivalent of uppercase letter
 {
-	if((*letter <= 90) && (*letter >= 65)) 
+	if((*letter <= 90) && (*letter >= 65))
 	{
 		*letter = *letter + 32;
 	}
@@ -94,8 +94,8 @@ void sanitizeInput(char input[])
 void createMap(junction *root)
 {
 	//variables
-	char cityName[MAX_NAME];
-	char directionIndicator[10];
+	char cityName[MAX_LENGTH];
+	char directionIndicator[MAX_LENGTH];
 	city *newCity, *lastcity;
 	junction *lastJunction, *currentJunction, *firstJunction;
 	int positionIndicator = 0;
@@ -112,7 +112,7 @@ void createMap(junction *root)
 		else if(i == 3) fp = fopen("west", "r");
 
 		//create junction node
-		fgets(directionIndicator, 10, fp);
+		fgets(directionIndicator, MAX_LENGTH, fp);
 		sanitizeInput(directionIndicator);
 		decap(&directionIndicator[0]);
 		currentJunction = malloc(sizeof(junction));
@@ -129,11 +129,13 @@ void createMap(junction *root)
 		{
 			lastJunction->nextJunction = currentJunction;
 		}
+
 		lastJunction = currentJunction; //changes junction to last junction
 
 		//reading city names from file into city nodes
-		fgets(cityName, MAX_NAME, fp);
+		fgets(cityName, MAX_LENGTH, fp);
 		sanitizeInput(cityName);
+
 		while(strcmp(cityName, "*") != 0) // The * denotes end of file
 		{
 			positionIndicator++;
@@ -153,7 +155,7 @@ void createMap(junction *root)
 				newCity->prev = lastcity;
 			}
 			lastcity = newCity;
-			fgets(cityName, MAX_NAME, fp);
+			fgets(cityName, MAX_LENGTH, fp);
 			sanitizeInput(cityName);
 		}
 		positionIndicator = 0; //reseting variables for next read
@@ -171,7 +173,7 @@ void createMap(junction *root)
 int citySearch(char name[], city *c, junction *root)
 {
 	//variables
-	char initialCity[MAX_NAME]; // starting city
+	char initialCity[MAX_LENGTH]; // starting city
 	city *search; //city to be searched
 	junction *currentJunction; //current junction node
 
@@ -275,7 +277,7 @@ void printCityList(junction *root)
 	junction *currentJunction;
 	currentJunction = root->nextJunction;
 	currentCity = currentJunction->nextCity;
-	char breakCity[MAX_NAME];
+	char breakCity[MAX_LENGTH];
 	strcpy(breakCity, currentCity->name); //sets break condition for loop
 	int i;
 	int length;
@@ -284,7 +286,7 @@ void printCityList(junction *root)
 	{
 		length = strlen(currentCity->name);
 		printf("%s", currentCity->name);
-		for(i = 0; i < (MAX_NAME - length); i++) printf(" "); //provides even spacing by accounting for name length
+		for(i = 0; i < (MAX_LENGTH - length); i++) printf(" "); //provides even spacing by accounting for name length
 		if(count % 2 == 1) printf("\n"); //formats printing into two columns
 
 		if(currentCity->next == NULL) //end of branch
@@ -314,12 +316,12 @@ void printCityList(junction *root)
 *********************************************/
 void userInput(junction *root, city *start, city *end) //root of the map, pointer to the starting city, pointer to the ending city
 {
-	char startingCity[MAX_NAME], endingCity[MAX_NAME];
+	char startingCity[MAX_LENGTH], endingCity[MAX_LENGTH];
 
 	while(1) //get valid starting city
 	{
 		printf("Enter the starting city(or 'citylist' for a list of available cities): ");
-		fgets(startingCity, MAX_NAME, stdin);
+		fgets(startingCity, MAX_LENGTH, stdin);
 		sanitizeInput(startingCity);
 
 		if(strcmp(startingCity, "Citylist") == 0) //prints out a list of cities in the map
@@ -334,7 +336,7 @@ void userInput(junction *root, city *start, city *end) //root of the map, pointe
 	while(1) //get valid ending city
 	{
 		printf("Enter the destination city(or 'citylist' for a list of available cities): ");
-		fgets(endingCity, MAX_NAME, stdin);
+		fgets(endingCity, MAX_LENGTH, stdin);
 		sanitizeInput(endingCity);
 
 		if(strcmp(endingCity, "Citylist") == 0)//prints out a list of cities in the map
@@ -373,7 +375,7 @@ void printRoute(STACK *route, city *start, city *end)
 	STACK_ELEMENT temp;
 	temp = Pop(route);
 	city *currentDirection;
-	char highway[10];
+	char highway[MAX_LENGTH];
 
 	strcpy(currentDirection->direction, start->direction);
 

@@ -2,20 +2,20 @@
 #define _DEFINITIONS_H
 
 #define FILES_TO_READ 4
-#define MAX_NAME 20
+#define MAX_LENGTH 20
 
 typedef struct city { //stores city info
-    char name[20];
-	char direction[20];
+    char name[MAX_LENGTH];
+	char direction[MAX_LENGTH];
 	int position;
     struct city *next;
     struct city *prev;
     } city;
 
 typedef struct junction { //stores junction info
-    char name[10];
+    char name[MAX_LENGTH];
     city *nextCity;
-	char direction[10];
+	char direction[MAX_LENGTH];
     struct junction *nextJunction;
     } junction;
 
