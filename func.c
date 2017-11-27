@@ -97,7 +97,7 @@ void createMap(junction *root)
 	char cityName[MAX_LENGTH];
 	char directionIndicator[MAX_LENGTH];
 	city *newCity, *lastcity;
-	junction *lastJunction, *currentJunction, *firstJunction;
+	junction *lastJunction, *currentJunction;
 	int positionIndicator = 0;
 	int firstCity = 0;
 
@@ -164,7 +164,8 @@ void createMap(junction *root)
 		firstCity = 0;
 		fclose(fp);
 	}
-	lastJunction->nextJunction = firstJunction; //connects junction loop
+
+	lastJunction->nextJunction = root->nextJunction; //connects junction loop
 }
 
 /*************************************************************************

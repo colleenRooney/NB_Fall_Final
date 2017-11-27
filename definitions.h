@@ -1,7 +1,7 @@
 #ifndef _DEFINITIONS_H
 #define _DEFINITIONS_H
 
-#define FILES_TO_READ 4
+#define FILES_TO_READ 2
 #define MAX_LENGTH 20
 
 typedef struct city { //stores city info
