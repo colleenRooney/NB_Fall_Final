@@ -100,7 +100,7 @@ void createMap(junction *root)
 	junction *lastJunction, *currentJunction;
 	int positionIndicator = 0;
 	int firstCity = 0;
-	float cityCost;
+	float cityMiles;
 	FILE *fp;
 
 	for(int i = 0; i < FILES_TO_READ; i++)
@@ -133,7 +133,7 @@ void createMap(junction *root)
 		lastJunction = currentJunction; //changes junction to last junction
 
 		//reading city names from file into city nodes
-		fscanf(fp,"%f \n",&cityCost);
+		fscanf(fp,"%f \n",&cityMiles);
 		fgets(cityName, MAX_LENGTH, fp);
 		sanitizeInput(cityName);
 
@@ -145,7 +145,7 @@ void createMap(junction *root)
 			newCity->prev = NULL;
 			newCity->position = positionIndicator;
 			strcpy(newCity->name, cityName);
-			newCity->cost = cityCost;
+			newCity->miles = cityMiles;
 
 			if(firstCity == 0)//connecting first city to the junction
 			{
@@ -159,7 +159,7 @@ void createMap(junction *root)
 			}
 
 			lastcity = newCity;
-			fscanf(fp,"%f \n",&cityCost);
+			fscanf(fp,"%f \n",&cityMiles);
 			fgets(cityName, MAX_LENGTH, fp);
 			sanitizeInput(cityName);
 		}
@@ -197,7 +197,7 @@ int citySearch(char name[], city *c, junction *root)
 			c->next = search->next;
 			c->prev = search->prev;
 			c->position = search->position;
-			c->cost = search->cost;
+			c->miles = search->miles;
 			strcpy(c->direction, currentJunction->direction);
 			return 1;
 		}
@@ -222,7 +222,7 @@ int citySearch(char name[], city *c, junction *root)
 * position values of start and end and
 * loads a stack with the path
 ******************************************/
-void makePath(junction *root, city *start, city *end, STACK *route, float *costTotal)
+void makePath(junction *root, city *start, city *end, STACK *route, float *milesTotal)
 {
 	junction *currentJunction = root->nextJunction;
 	city *currentCity;
@@ -236,7 +236,7 @@ void makePath(junction *root, city *start, city *end, STACK *route, float *costT
 
 	if(strcmp(start->direction, end->direction) != 0) //cities on different branches
 	{
-		*costTotal = start->cost + end->cost;
+		*milesTotal = start->miles + end->miles;
 		while(currentCity->prev != NULL)
 		{
 			currentCity = currentCity->prev;
@@ -257,7 +257,7 @@ void makePath(junction *root, city *start, city *end, STACK *route, float *costT
 
 	else if(start->position > end->position) //same branch, start is further down than end
 	{
-		*costTotal = start->cost - end->cost;
+		*milesTotal = start->miles - end->miles;
 		while(strcmp(currentCity->name, start->name) != 0)
 		{
 			currentCity = currentCity->next;
@@ -267,7 +267,7 @@ void makePath(junction *root, city *start, city *end, STACK *route, float *costT
 
 	else //start is further up than end
 	{
-		*costTotal = end->cost - start->cost;
+		*milesTotal = end->miles - start->miles;
 		while(strcmp(currentCity->name, start->name) != 0)
 		{
 			currentCity = currentCity->prev;
@@ -381,12 +381,13 @@ void swapDirection(city *currentDirection)
 *printRoute
 * Pops elements from a stack and prints.
 ******************************************/
-void printRoute(STACK *route, city *start, city *end, float *costTotal)
+void printRoute(STACK *route, city *start, city *end, float *milesTotal)
 {
 	STACK_ELEMENT temp;
 	temp = Pop(route);
 	city *currentDirection;
 	char highway[MAX_LENGTH];
+	float costTotal = *milesTotal * COST_PER_MILE;
 
 	strcpy(currentDirection->direction, start->direction);
 
@@ -422,6 +423,7 @@ void printRoute(STACK *route, city *start, city *end, float *costTotal)
 	}
 
 	printf("arrived at %s.\n", temp.name);
-	printf("Total Cost of Trip: $%.2f\n\n",*costTotal);
+        printf("Miles travelled: %.2f\n",*milesTotal);
+	printf("Total Cost of Trip: $%.2f\n\n",costTotal);
 	return;
 }

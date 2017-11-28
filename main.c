@@ -13,7 +13,7 @@ void main(void)
 	route = malloc(sizeof(STACK));
 	createStack(route);
 	char cont = 'y'; //check whether to loop program
-	float *costTotal = malloc(sizeof(float)); //float variable for the total trip cost
+	float *milesTotal = malloc(sizeof(float)); //float variable for the total trip miles
 
 	//creating initial junction
 	root = malloc(sizeof(junction));
@@ -34,8 +34,8 @@ void main(void)
 	while(cont != 'n')
 	{
 		userInput(root, start, end);
-		makePath(root, start, end, route, costTotal);
-		printRoute(route, start, end, costTotal);
+		makePath(root, start, end, route, milesTotal);
+		printRoute(route, start, end, milesTotal);
 		while(1)
 		{
 			printf("Check another route(y/n)? ");
