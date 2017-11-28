@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "stack.h"
+#include "definitions.h"
 
 /******************************
 *createStack
@@ -33,12 +34,12 @@ void Push(STACK *s, char cityName[])
 *pop
 * returns last item off the stack
 *************************************/
-struct STACK_ELEMENT Pop(STACK *s)
+city Pop(STACK *s)
 {
 	STACK_ELEMENT *temp;
-	STACK_ELEMENT p;
+	city p;
 	temp = s->head;
-	p = *temp;
+	strcpy(p.name, temp->name);
 	s->head = s->head->prev;
 	free(temp);
 	return p;
@@ -48,7 +49,9 @@ struct STACK_ELEMENT Pop(STACK *s)
 *peek
 * returns top  item without destruction
 ************************************************/
-struct STACK_ELEMENT Peek(STACK *s)
+city Peek(STACK *s)
 {
-	return *(s->head);
+	city p;
+	strcpy(p.name, s->head->name);
+	return p;
 }

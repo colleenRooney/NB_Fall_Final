@@ -12,7 +12,7 @@ typedef struct STACK {
 
 void createStack(STACK *s);
 void Push(STACK *s, char cityName[]);
-struct STACK_ELEMENT Pop(STACK *s);
-struct STACK_ELEMENT Peek(STACK *s);
+struct city Pop(STACK *s);
+struct city Peek(STACK *s);
 
 #endif
