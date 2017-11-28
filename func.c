@@ -100,7 +100,7 @@ void createMap(junction *root)
 	junction *lastJunction, *currentJunction;
 	int positionIndicator = 0;
 	int firstCity = 0;
-
+	float cityCost;
 	FILE *fp;
 
 	for(int i = 0; i < FILES_TO_READ; i++)
@@ -133,6 +133,7 @@ void createMap(junction *root)
 		lastJunction = currentJunction; //changes junction to last junction
 
 		//reading city names from file into city nodes
+		fscanf(fp,"%f \n",&cityCost);
 		fgets(cityName, MAX_LENGTH, fp);
 		sanitizeInput(cityName);
 
@@ -144,6 +145,8 @@ void createMap(junction *root)
 			newCity->prev = NULL;
 			newCity->position = positionIndicator;
 			strcpy(newCity->name, cityName);
+			newCity->cost = cityCost;
+
 			if(firstCity == 0)//connecting first city to the junction
 			{
 				currentJunction->nextCity = newCity;
@@ -156,6 +159,7 @@ void createMap(junction *root)
 			}
 
 			lastcity = newCity;
+			fscanf(fp,"%f \n",&cityCost);
 			fgets(cityName, MAX_LENGTH, fp);
 			sanitizeInput(cityName);
 		}
@@ -193,6 +197,7 @@ int citySearch(char name[], city *c, junction *root)
 			c->next = search->next;
 			c->prev = search->prev;
 			c->position = search->position;
+			c->cost = search->cost;
 			strcpy(c->direction, currentJunction->direction);
 			return 1;
 		}
@@ -217,7 +222,7 @@ int citySearch(char name[], city *c, junction *root)
 * position values of start and end and
 * loads a stack with the path
 ******************************************/
-void makePath(junction *root, city *start, city *end, STACK *route)
+void makePath(junction *root, city *start, city *end, STACK *route, float *costTotal)
 {
 	junction *currentJunction = root->nextJunction;
 	city *currentCity;
@@ -231,6 +236,7 @@ void makePath(junction *root, city *start, city *end, STACK *route)
 
 	if(strcmp(start->direction, end->direction) != 0) //cities on different branches
 	{
+		*costTotal = start->cost + end->cost;
 		while(currentCity->prev != NULL)
 		{
 			currentCity = currentCity->prev;
@@ -251,6 +257,7 @@ void makePath(junction *root, city *start, city *end, STACK *route)
 
 	else if(start->position > end->position) //same branch, start is further down than end
 	{
+		*costTotal = start->cost - end->cost;
 		while(strcmp(currentCity->name, start->name) != 0)
 		{
 			currentCity = currentCity->next;
@@ -260,6 +267,7 @@ void makePath(junction *root, city *start, city *end, STACK *route)
 
 	else //start is further up than end
 	{
+		*costTotal = end->cost - start->cost;
 		while(strcmp(currentCity->name, start->name) != 0)
 		{
 			currentCity = currentCity->prev;
@@ -373,7 +381,7 @@ void swapDirection(city *currentDirection)
 *printRoute
 * Pops elements from a stack and prints.
 ******************************************/
-void printRoute(STACK *route, city *start, city *end)
+void printRoute(STACK *route, city *start, city *end, float *costTotal)
 {
 	STACK_ELEMENT temp;
 	temp = Pop(route);
@@ -413,6 +421,7 @@ void printRoute(STACK *route, city *start, city *end)
 		}
 	}
 
-	printf("arrived at %s.\n\n", temp.name);
+	printf("arrived at %s.\n", temp.name);
+	printf("Total Cost of Trip: $%.2f\n\n",*costTotal);
 	return;
 }
