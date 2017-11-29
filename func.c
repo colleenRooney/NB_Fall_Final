@@ -400,6 +400,7 @@ void printRoute(STACK *route, city *start, city *end, float *milesTotal)
 	}
 	printf("\nHeading %s out of %s on %s... ", currentDirection->direction, temp.name, highway);
 
+	while(strcmp(temp.name, end->name) != 0)
 	{
 		temp = Pop(route);
 		if(strcmp(temp.name, "junction") != 0 && strcmp(temp.name, end->name) != 0)  //don't print junction or last element
