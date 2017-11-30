@@ -33,7 +33,7 @@ void createMap(junction *root)
 
 		//create junction node
 		fgets(directionIndicator, MAX_LENGTH, fp);
-		sanitizeInput(directionIndicator);
+		standardizeInput(directionIndicator);
 		decap(&directionIndicator[0]);
 
 		currentJunction = malloc(sizeof(junction));
@@ -55,7 +55,7 @@ void createMap(junction *root)
 		//reading city names from file into city nodes
 		fscanf(fp,"%f \n",&cityMiles);
 		fgets(cityName, MAX_LENGTH, fp);
-		sanitizeInput(cityName);
+		standardizeInput(cityName);
 
 		while(strcmp(cityName, "*") != 0) // The * denotes end of file
 		{
@@ -81,7 +81,7 @@ void createMap(junction *root)
 			lastcity = newCity;
 			fscanf(fp,"%f \n",&cityMiles);
 			fgets(cityName, MAX_LENGTH, fp);
-			sanitizeInput(cityName);
+			standardizeInput(cityName);
 		}
 
 		positionIndicator = 0; //reseting variables for next file read
@@ -253,7 +253,7 @@ void userInput(junction *root, city *start, city *end) //root of the map, pointe
 	{
 		printf("Enter the starting city(or 'citylist' for a list of available cities): ");
 		fgets(startingCity, MAX_LENGTH, stdin);
-		sanitizeInput(startingCity);
+		standardizeInput(startingCity);
 
 		if(strcmp(startingCity, "Citylist") == 0) //prints out a list of cities in the map
 		{
@@ -268,7 +268,7 @@ void userInput(junction *root, city *start, city *end) //root of the map, pointe
 	{
 		printf("Enter the destination city(or 'citylist' for a list of available cities): ");
 		fgets(endingCity, MAX_LENGTH, stdin);
-		sanitizeInput(endingCity);
+		standardizeInput(endingCity);
 
 		if(strcmp(endingCity, "Citylist") == 0)//prints out a list of cities in the map
 		{
@@ -330,15 +330,15 @@ void printRoute(STACK *route, city *start, city *end, float *milesTotal)
 		else if(strcmp(temp.name, "junction") == 0) //moving between branches, might change onto different highway
 		{
 			if(strcmp(end->direction, currentDirection->direction) == 0) //if staying on the same highway
-    			{
-        			printf("continuing %s on %s...", currentDirection->direction, highway);
-    			}
-    			else //turning onto new highway
-    			{
-        			if(strcmp(highway, "Interstate 5") == 0) strcpy(highway, "Highway 26");
-        			else strcpy(highway, "Interstate 5");
-        			printf("turning %s onto %s...", end->direction, highway);
-    			}
+    		{
+        		printf("continuing %s on %s...", currentDirection->direction, highway);
+    		}
+    		else //turning onto new highway
+    		{
+        		if(strcmp(highway, "Interstate 5") == 0) strcpy(highway, "Highway 26");
+        		else strcpy(highway, "Interstate 5");
+        		printf("turning %s onto %s...", end->direction, highway);
+    		}
 		}
 	}
 

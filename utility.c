@@ -55,10 +55,10 @@ void capitalize(char *letter) //function returns uppercase equivalent of lowerca
 }
 
 /*********************************************\
-*sanitizeInput
+*standardizeInput
 * modifies a string into a standard format
 \**********************************************/
-void sanitizeInput(char input[])
+void standardizeInput(char input[])
 {
 	int length = strlen(input);
 

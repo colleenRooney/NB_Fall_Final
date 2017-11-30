@@ -5,11 +5,6 @@
 #include "stack.h"
 
 //function prototypes
-int isaLetter(char letter);
-int isaSpace(char letter);
-void decap(char *letter);
-void capitalize(char *letter);
-void sanitizeInput(char input[]);
 void createMap(junction *root);
 int citySearch(char name[], city *c, junction *root);
 void makePath(junction *root, city *start, city *end, STACK *route, float *milesTotal);
