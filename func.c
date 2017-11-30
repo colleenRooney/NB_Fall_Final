@@ -2,88 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include "definitions.h"
+#include "utility.h"
 #include "stack.h"
-
-/*********************************************\
-*isaLetter
-* returns true if character is a letter
-\**********************************************/
-int isaLetter(char letter) //if character is a letter return 1, else return 0
-{
-	if(((letter <= 122) && (letter >= 97)) || ((letter <= 90) && (letter >= 65)))
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-/*********************************************\
-*isaSpace
-* returns true if character is a space
-\**********************************************/
-int isaSpace(char letter)
-{
-	if(letter == 32) return 1;
-	else return 0;
-}
-
-/*********************************************\
-*decap
-* decaps input if input is uppercase
-\**********************************************/
-void decap(char *letter) //function returns lowercase equivalent of uppercase letter
-{
-	if((*letter <= 90) && (*letter >= 65))
-	{
-		*letter = *letter + 32;
-	}
-	return;
-}
- 
-/*********************************************\
-*capitalize
-* capitalizes input if input is lowercase
-\**********************************************/
-void capitalize(char *letter) //function returns uppercase equivalent of lowercase letter
-{
-	if((*letter <= 122) && (*letter >= 97))
-		{
-			*letter = *letter - 32;
-		}
-	return;
-}
-
-/*********************************************\
-*sanitizeInput
-* modifies a string into a standard format
-\**********************************************/
-void sanitizeInput(char input[])
-{
-	int length = strlen(input);
-
-	for(int i = 0; i < length; i++)
-	{
-		if(input[i] == '\n')
-		{
-			input[i] = '\0'; //terminate string
-		}
-		else if(i == 0 || isaSpace(input[i-1])) //if first letter or new word
-		{
-			capitalize(&input[i]);
-		}
-		else if(isaSpace(input[i]) && !isaLetter(input[i+1])) //if character is a space without a following letter
-		{
-			input[i]='\0'; //terminate string
-		}
-		else
-		{
-			decap(&input[i]);
-		}
-	}
-}
 
 /*************************************************************
 *createMap
@@ -423,7 +343,7 @@ void printRoute(STACK *route, city *start, city *end, float *milesTotal)
 	}
 
 	printf("arrived at %s.\n", temp.name);
-        printf("Miles travelled: %.2f\n",*milesTotal);
+    printf("Miles travelled: %.2f\n",*milesTotal);
 	printf("Total Cost of Trip: $%.2f\n\n",costTotal);
 	return;
 }
