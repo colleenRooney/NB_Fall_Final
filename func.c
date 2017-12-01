@@ -204,57 +204,51 @@ void printCityList(junction *root)
 	char name[MAX_LENGTH];
 	int i, j, k;
 	int length; //holds string length to help format printing
-	int level = -1; //level determines how many cities down we need to move to print
+	int level = 0; //level determines how many cities down we need to move to print
 	int nullCount = 0; //each time our next city is null increment, when all 4 branches are null return
-	while(1)
+
+	for(j = 0; j < FILES_TO_READ; j++)
 	{
-		if(level == -1)//print out junction direction names first
+		strcpy(name, currentJunction->direction);
+		capitalize(&name[0]);
+		length = strlen(name);
+   		printf("%s", name);
+   		for(i = 0; i < (MAX_LENGTH - length); i++) printf(" "); //provides even spacing by accounting for name length
+			currentJunction = currentJunction->nextJunction;
+	}
+	printf("\n--------------------------------------------------------------------------------------------\n");
+
+	while(nullCount != FILES_TO_READ)
+	{
+		nullCount = 0;
+		currentJunction = root->nextJunction;
+		currentCity = currentJunction->nextCity;
+		strcpy(name, currentCity->name);
+		for(i = 0; i < FILES_TO_READ; i++) //prints out one name per branch
 		{
-			for(j = 0; j < FILES_TO_READ; j++)
+			for(j = 0; j < level; j++) //moves down the city list to find a cityat a given level
 			{
-				strcpy(name, currentJunction->direction);
-				capitalize(&name[0]);
-				length = strlen(name);
-        		printf("%s", name);
-        		for(i = 0; i < (MAX_LENGTH - length); i++) printf(" "); //provides even spacing by accounting for name length
-				currentJunction = currentJunction->nextJunction;
+				if(currentCity->next != NULL)
+				{
+					currentCity = currentCity->next;
+					strcpy(name, currentCity->name);
+				}
+				else //once the branch is null, increment null counter and make a blank string to print
+				{
+					strcpy(name, " ");
+					nullCount++;
+					break;
+				}
 			}
-			printf("\n--------------------------------------------------------------------------------------------\n");
-			level = 0;
-		}
-		else //printing out city names
-		{
-			currentJunction = root->nextJunction;
+			length = strlen(name);
+       		printf("%s", name);
+	        for(k = 0; k < (MAX_LENGTH - length); k++) printf(" ");
+			currentJunction = currentJunction->nextJunction;
 			currentCity = currentJunction->nextCity;
 			strcpy(name, currentCity->name);
-			for(i = 0; i < FILES_TO_READ; i++) //prints out one name per branch
-			{
-				for(j = 0; j < level; j++) //moves down the city list to find a cityat a given level
-				{
-					if(currentCity->next != NULL)
-					{
-						currentCity = currentCity->next;
-						strcpy(name, currentCity->name);
-					}
-					else //once the branch is null, increment null counter and make a blank string to print
-					{
-						strcpy(name, " ");
-						nullCount++;
-						break;
-					}
-				}
-				length = strlen(name);
-        		printf("%s", name);
-		        for(k = 0; k < (MAX_LENGTH - length); k++) printf(" ");
-				currentJunction = currentJunction->nextJunction;
-				currentCity = currentJunction->nextCity;
-				strcpy(name, currentCity->name);
-			}
-			printf("\n");
-			if(nullCount == 4) return; //if all 4 branches are null then we're done
-			else nullCount = 0;
-			level++;
 		}
+		printf("\n");
+		level++;
 	}
 }
 
