@@ -360,8 +360,8 @@ void printRoute(STACK *route, city *start, city *end, float *milesTotal)
 		}
 	}
 
-	printf("arrived at %s.\n\n", temp.name);
-    printf("Miles travelled: %.2f\n",*milesTotal);
+	printf("arrived at %s.\n", temp.name);
+	printf("Miles travelled: %.2f\n",*milesTotal);
 	printf("Total Cost of Trip: $%.2f\n\n",costTotal);
 	return;
 }
