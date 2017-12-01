@@ -52,9 +52,8 @@ void createMap(junction *root)
 		lastJunction = currentJunction; //changes junction to last junction
 
 		//reading city names from file into city nodes
-		fscanf(fp,"%f \n",&cityMiles);
 		fgets(cityName, MAX_LENGTH, fp);
-		standardizeInput(cityName);
+		breakupInput(cityName, &cityMiles);
 
 		while(strcmp(cityName, "*") != 0) // The * denotes end of file
 		{
@@ -76,9 +75,8 @@ void createMap(junction *root)
 			}
 
 			lastcity = newCity;
-			fscanf(fp,"%f \n",&cityMiles);
 			fgets(cityName, MAX_LENGTH, fp);
-			standardizeInput(cityName);
+			breakupInput(cityName, &cityMiles);
 		}
 
 		firstCity = 0; //reseting variable for next map read

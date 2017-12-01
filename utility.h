@@ -7,5 +7,6 @@ int isaSpace(char letter);
 void decap(char *letter);
 void capitalize(char *letter);
 void standardizeInput(char input[]);
+void breakupInput(char input[], float *cityMiles);
 
 #endif
