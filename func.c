@@ -315,8 +315,7 @@ void swapDirection(char currentDirection[MAX_LENGTH])
 ******************************************/
 void printRoute(STACK *route, city *start, city *end, float *milesTotal)
 {
-	city temp;
-	temp = Pop(route);
+	city temp = Pop(route);
 	char currentDirection[MAX_LENGTH];
 	char highway[MAX_LENGTH];
 	float costTotal = *milesTotal * COST_PER_MILE;
