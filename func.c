@@ -121,7 +121,7 @@ int citySearch(char name[], city *c, junction *root)
 			search = currentJunction->nextCity;
 			if(strcmp(search->name, initialCity) == 0) //checks to see if at original branch, if so exits
 			{
-				printf("City does not exist in map.\n");
+				printf(RED "City does not exist in map.\n" COLOR_RESET);
 				return 0;
 			}
 		}
@@ -294,7 +294,7 @@ void userInput(junction *root, city *start, city *end) //root of the map, pointe
 		}
 		else if(strcmp(startingCity, endingCity) == 0) //starting and ending cities cannot be the same
 		{
-			printf("You're already there. Try another destination.\n");
+			printf(RED "You're already there. Try another destination.\n" COLOR_RESET);
 		}
 		else if(citySearch(endingCity, end, root) == 1)//checks if city exists in the map, if true sets the ending city and returns
 		{

@@ -4,6 +4,9 @@
 #define FILES_TO_READ 4
 #define MAX_LENGTH 20
 #define COST_PER_MILE 0.09 //cost per mile at 30mi/gal and $2.55/gal
+#define RED "\x1b[1;31m"
+#define COLOR_RESET "\x1b[0m"
+
 
 typedef struct city { //stores city info
     char name[MAX_LENGTH];
