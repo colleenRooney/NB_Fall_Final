@@ -301,12 +301,12 @@ void userInput(junction *root, city *start, city *end) //root of the map, pointe
 *swapDirection
 * swaps cardinal directions
 ***********************************/
-void swapDirection(city *currentDirection)
+void swapDirection(char currentDirection[MAX_LENGTH])
 {
-	if(strcmp(currentDirection->direction, "north") == 0) strcpy(currentDirection->direction, "south");
-	else if(strcmp(currentDirection->direction, "south") == 0) strcpy(currentDirection->direction, "north");
-	else if(strcmp(currentDirection->direction, "east") == 0) strcpy(currentDirection->direction, "west");
-	else if(strcmp(currentDirection->direction, "west") == 0) strcpy(currentDirection->direction, "east");
+	if(strcmp(currentDirection, "north") == 0) strcpy(currentDirection, "south");
+	else if(strcmp(currentDirection, "south") == 0) strcpy(currentDirection, "north");
+	else if(strcmp(currentDirection, "east") == 0) strcpy(currentDirection, "west");
+	else if(strcmp(currentDirection, "west") == 0) strcpy(currentDirection, "east");
 }
 
 /****************************************
@@ -317,11 +317,11 @@ void printRoute(STACK *route, city *start, city *end, float *milesTotal)
 {
 	city temp;
 	temp = Pop(route);
-	city *currentDirection;
+	char currentDirection[MAX_LENGTH];
 	char highway[MAX_LENGTH];
 	float costTotal = *milesTotal * COST_PER_MILE;
 
-	strcpy(currentDirection->direction, start->direction);
+	strcpy(currentDirection, start->direction);
 
 	if(strcmp(start->direction, "north") == 0 || strcmp(start->direction, "south") == 0) strcpy(highway, "Interstate 5");
 	else if(strcmp(start->direction, "east") == 0 || strcmp(start->direction, "west") == 0) strcpy(highway, "Highway 26");
@@ -330,7 +330,7 @@ void printRoute(STACK *route, city *start, city *end, float *milesTotal)
 	{
 		swapDirection(currentDirection); //correct for direction of movement
 	}
-	printf("\nHeading %s out of %s on %s...\n", currentDirection->direction, temp.name, highway);
+	printf("\nHeading %s out of %s on %s...\n", currentDirection, temp.name, highway);
 
 	while(strcmp(temp.name, end->name) != 0)
 	{
@@ -341,9 +341,9 @@ void printRoute(STACK *route, city *start, city *end, float *milesTotal)
 		}
 		else if(strcmp(temp.name, "junction") == 0) //moving between branches, might change onto different highway
 		{
-			if(strcmp(end->direction, currentDirection->direction) == 0) //if staying on the same highway
+			if(strcmp(end->direction, currentDirection) == 0) //if staying on the same highway
     		{
-        		printf("continuing %s on %s...\n", currentDirection->direction, highway);
+        		printf("continuing %s on %s...\n", currentDirection, highway);
     		}
     		else //turning onto new highway
     		{
