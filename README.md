@@ -3,7 +3,7 @@
 
 **Authors** Jeff, Matt G, Colleen, Jason, Mike, Aark, Jordan
 
-Simple map, user enters a starting location and a destination and directions and cost of travel is returned
+Simple map, user enters a starting location and a destination. Directions and cost of travel are returned
 
 ## Running Program:
 **In directory:**
