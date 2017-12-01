@@ -1,9 +1,9 @@
 # NB_Fall_Final
 **Final project for New Beginnings fall term**
 
-Simple map, user enters a starting location and a destination and directions and cost of travel is returned
-
 **Authors** Jeff, Matt G, Colleen, Jason, Mike, Aark, Jordan
+
+Simple map, user enters a starting location and a destination and directions and cost of travel is returned
 
 ## Running Program:
 **In directory:**
