@@ -201,36 +201,61 @@ void printCityList(junction *root)
 	junction *currentJunction;
 	currentJunction = root->nextJunction;
 	currentCity = currentJunction->nextCity;
-	char breakCity[MAX_LENGTH];
-	strcpy(breakCity, currentCity->name); //sets break condition for loop
-	int i;
-	int length;
-	int count = 0;
+	char name[MAX_LENGTH];
+	int i, j, k;
+	int length; //holds string length to help format printing
+	int level = -1; //level determines how many cities down we need to move to print
+	int nullCount = 0; //each time our next city is null increment, when all 4 branches are null return
 	while(1)
 	{
-		length = strlen(currentCity->name);
-		printf("%s", currentCity->name);
-		for(i = 0; i < (MAX_LENGTH - length); i++) printf(" "); //provides even spacing by accounting for name length
-		if(count % 2 == 1) printf("\n"); //formats printing into two columns
-
-		if(currentCity->next == NULL) //end of branch
+		if(level == -1)//print out junction direction names first
 		{
-			currentJunction = currentJunction->nextJunction;
+			for(j = 0; j < FILES_TO_READ; j++)
+			{
+				strcpy(name, currentJunction->direction);
+				capitalize(&name[0]);
+				length = strlen(name);
+        		printf("%s", name);
+        		for(i = 0; i < (MAX_LENGTH - length); i++) printf(" "); //provides even spacing by accounting for name length
+				currentJunction = currentJunction->nextJunction;
+			}
+			printf("\n--------------------------------------------------------------------------------------------\n");
+			level = 0;
+		}
+		else //printing out city names
+		{
+			currentJunction = root->nextJunction;
 			currentCity = currentJunction->nextCity;
+			strcpy(name, currentCity->name);
+			for(i = 0; i < FILES_TO_READ; i++) //prints out one name per branch
+			{
+				for(j = 0; j < level; j++) //moves down the city list to find a cityat a given level
+				{
+					if(currentCity->next != NULL)
+					{
+						currentCity = currentCity->next;
+						strcpy(name, currentCity->name);
+					}
+					else //once the branch is null, increment null counter and make a blank string to print
+					{
+						strcpy(name, " ");
+						nullCount++;
+						break;
+					}
+				}
+				length = strlen(name);
+        		printf("%s", name);
+		        for(k = 0; k < (MAX_LENGTH - length); k++) printf(" ");
+				currentJunction = currentJunction->nextJunction;
+				currentCity = currentJunction->nextCity;
+				strcpy(name, currentCity->name);
+			}
+			printf("\n");
+			if(nullCount == 4) return; //if all 4 branches are null then we're done
+			else nullCount = 0;
+			level++;
 		}
-		else //traverse branch
-		{
-			currentCity = currentCity->next;
-		}
-
-		if(strcmp(currentCity->name, breakCity) == 0) //traversed all possible cities
-		{
-			break;
-		}
-		count++;
 	}
-	printf("\n");
-	return;
 }
 
 /********************************************
@@ -311,31 +336,31 @@ void printRoute(STACK *route, city *start, city *end, float *milesTotal)
 	{
 		swapDirection(currentDirection); //correct for direction of movement
 	}
-	printf("\nHeading %s out of %s on %s... ", currentDirection->direction, temp.name, highway);
+	printf("\nHeading %s out of %s on %s...\n", currentDirection->direction, temp.name, highway);
 
 	while(strcmp(temp.name, end->name) != 0)
 	{
 		temp = Pop(route);
 		if(strcmp(temp.name, "junction") != 0 && strcmp(temp.name, end->name) != 0)  //don't print junction or last element
 		{
-			printf("passing %s... ", temp.name);
+			printf("passing %s...\n", temp.name);
 		}
 		else if(strcmp(temp.name, "junction") == 0) //moving between branches, might change onto different highway
 		{
 			if(strcmp(end->direction, currentDirection->direction) == 0) //if staying on the same highway
     		{
-        		printf("continuing %s on %s...", currentDirection->direction, highway);
+        		printf("continuing %s on %s...\n", currentDirection->direction, highway);
     		}
     		else //turning onto new highway
     		{
         		if(strcmp(highway, "Interstate 5") == 0) strcpy(highway, "Highway 26");
         		else strcpy(highway, "Interstate 5");
-        		printf("turning %s onto %s...", end->direction, highway);
+        		printf("turning %s onto %s...\n", end->direction, highway);
     		}
 		}
 	}
 
-	printf("arrived at %s.\n", temp.name);
+	printf("arrived at %s.\n\n", temp.name);
     printf("Miles travelled: %.2f\n",*milesTotal);
 	printf("Total Cost of Trip: $%.2f\n\n",costTotal);
 	return;
