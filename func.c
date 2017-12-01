@@ -18,7 +18,6 @@ void createMap(junction *root)
 	char directionIndicator[MAX_LENGTH];
 	city *newCity, *lastcity;
 	junction *lastJunction, *currentJunction;
-	int positionIndicator = 0;
 	int firstCity = 0;
 	float cityMiles;
 	FILE *fp;
@@ -59,11 +58,9 @@ void createMap(junction *root)
 
 		while(strcmp(cityName, "*") != 0) // The * denotes end of file
 		{
-			positionIndicator++;
 			newCity = malloc(sizeof(city));
 			newCity->next = NULL;
 			newCity->prev = NULL;
-			newCity->position = positionIndicator;
 			strcpy(newCity->name, cityName);
 			newCity->miles = cityMiles;
 
@@ -84,8 +81,7 @@ void createMap(junction *root)
 			standardizeInput(cityName);
 		}
 
-		positionIndicator = 0; //reseting variables for next file read
-		firstCity = 0;
+		firstCity = 0; //reseting variable for next map read
 		fclose(fp);
 	}
 
@@ -116,7 +112,6 @@ int citySearch(char name[], city *c, junction *root)
 			strcpy(c->name, search->name); //sets incoming pointer to the current city node
 			c->next = search->next;
 			c->prev = search->prev;
-			c->position = search->position;
 			c->miles = search->miles;
 			strcpy(c->direction, currentJunction->direction);
 			return 1;
@@ -175,7 +170,7 @@ void makePath(junction *root, city *start, city *end, STACK *route, float *miles
 		Push(route, currentCity->name);
 	}
 
-	else if(start->position > end->position) //same branch, start is further down than end
+	else if(start->miles > end->miles) //same branch, start is further down than end
 	{
 		*milesTotal = start->miles - end->miles;
 		while(strcmp(currentCity->name, start->name) != 0)
@@ -314,7 +309,7 @@ void printRoute(STACK *route, city *start, city *end, float *milesTotal)
 	if(strcmp(start->direction, "north") == 0 || strcmp(start->direction, "south") == 0) strcpy(highway, "Interstate 5");
 	else if(strcmp(start->direction, "east") == 0 || strcmp(start->direction, "west") == 0) strcpy(highway, "Highway 26");
 
-	if(strcmp(start->direction, end->direction) != 0 || start->position > end->position) //if moving towards to the junction
+	if(strcmp(start->direction, end->direction) != 0 || start->miles > end->miles) //if moving towards to the junction
 	{
 		swapDirection(currentDirection); //correct for direction of movement
 	}

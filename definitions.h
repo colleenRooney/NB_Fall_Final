@@ -8,7 +8,6 @@
 typedef struct city { //stores city info
     char name[MAX_LENGTH];
 	char direction[MAX_LENGTH];
-	int position;
 	float miles;
     struct city *next;
     struct city *prev;
