@@ -10,14 +10,8 @@
 \**********************************************/
 int isaLetter(char letter) //if character is a letter return 1, else return 0
 {
-	if(((letter <= 122) && (letter >= 97)) || ((letter <= 90) && (letter >= 65)))
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
+	if(((letter <= 122) && (letter >= 97)) || ((letter <= 90) && (letter >= 65))) return 1;
+	else return 0;
 }
 
 /*********************************************\
@@ -36,10 +30,7 @@ int isaSpace(char letter)
 \**********************************************/
 void decap(char *letter) //function returns lowercase equivalent of uppercase letter
 {
-	if((*letter <= 90) && (*letter >= 65))
-	{
-		*letter = *letter + 32;
-	}
+	if((*letter <= 90) && (*letter >= 65)) *letter = *letter + 32;
 	return;
 }
  
@@ -49,10 +40,7 @@ void decap(char *letter) //function returns lowercase equivalent of uppercase le
 \**********************************************/
 void capitalize(char *letter) //function returns uppercase equivalent of lowercase letter
 {
-	if((*letter <= 122) && (*letter >= 97))
-		{
-			*letter = *letter - 32;
-		}
+	if((*letter <= 122) && (*letter >= 97)) *letter = *letter - 32;
 	return;
 }
 
@@ -101,18 +89,16 @@ void createMap(junction *root)
 	int positionIndicator = 0;
 	int firstCity = 0;
 
-	FILE *fp;
+	FILE *mapFile;
 
 	for(int i = 0; i < FILES_TO_READ; i++)
 	{
 		//opening proper file
-		if(i == 0) fp = fopen("north", "r");
-		else if(i == 1) fp = fopen("south", "r");
-		else if(i == 2) fp = fopen("east", "r");
-		else if(i == 3) fp = fopen("west", "r");
+		if(i == 0) mapFile = fopen("north", "r");
+		else if(i == 1) mapFile = fopen("south", "r");
 
 		//create junction node
-		fgets(directionIndicator, MAX_LENGTH, fp);
+		fgets(directionIndicator, MAX_LENGTH, mapFile);
 		sanitizeInput(directionIndicator);
 		decap(&directionIndicator[0]);
 
@@ -133,7 +119,7 @@ void createMap(junction *root)
 		lastJunction = currentJunction; //changes junction to last junction
 
 		//reading city names from file into city nodes
-		fgets(cityName, MAX_LENGTH, fp);
+		fgets(cityName, MAX_LENGTH, mapFile);
 		sanitizeInput(cityName);
 
 		while(strcmp(cityName, "*") != 0) // The * denotes end of file
@@ -156,13 +142,13 @@ void createMap(junction *root)
 			}
 
 			lastcity = newCity;
-			fgets(cityName, MAX_LENGTH, fp);
+			fgets(cityName, MAX_LENGTH, mapFile);
 			sanitizeInput(cityName);
 		}
 
 		positionIndicator = 0; //reseting variables for next file read
 		firstCity = 0;
-		fclose(fp);
+		fclose(mapFile);
 	}
 
 	lastJunction->nextJunction = root->nextJunction; //connects junction loop
