@@ -10,8 +10,8 @@
 
 typedef struct city { //stores city info
     char name[MAX_LENGTH];
-	char direction[MAX_LENGTH];
-	float miles;
+    char direction[MAX_LENGTH];
+    float miles;
     struct city *next;
     struct city *prev;
     } city;
@@ -19,7 +19,7 @@ typedef struct city { //stores city info
 typedef struct junction { //stores junction info
     char name[MAX_LENGTH];
     city *nextCity;
-	char direction[MAX_LENGTH];
+    char direction[MAX_LENGTH];
     struct junction *nextJunction;
     } junction;
 
