@@ -4,6 +4,16 @@
 #include "definitions.h"
 
 /*********************************************\
+*isaNumber
+* returns true if character is a number
+\**********************************************/
+int isaNumber(char letter) //if character is a letter return 1, else return 0
+{
+	if(((letter <= 57) && (letter >= 48))) return 1;
+	else return 0;
+}
+
+/*********************************************\
 *isaLetter
 * returns true if character is a letter
 \**********************************************/
@@ -42,7 +52,6 @@ void capitalize(char *letter) //function returns uppercase equivalent of lowerca
 	if((*letter <= 122) && (*letter >= 97)) *letter = *letter - 32;
 	return;
 }
-
 /*********************************************\
 *standardizeInput
 * modifies a string into a standard format
@@ -56,10 +65,11 @@ void standardizeInput(char input[])
 		if(input[i] == '\n') input[i] = '\0'; //terminate string
 		else if(i == 0 || isaSpace(input[i-1])) capitalize(&input[i]); //if first letter or new wor
 
-		else if(isaSpace(input[i]) && !isaLetter(input[i+1])) input[i]='\0'; //if character is a space without a following letter
+		else if(!isaNumber(input[i+1]) && isaSpace(input[i]) && !isaLetter(input[i+1])) input[i]='\0'; //if character is a space without a following letter
 		else decap(&input[i]);
 	}
 }
+
 /*************************************************************
 * breakupInput
 * Format of the map files is <city name>|<miles>
