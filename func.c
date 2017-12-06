@@ -140,15 +140,15 @@ void makePath(junction *root, city *start, city *end, STACK *route, float *miles
 	junction *currentJunction = root->nextJunction;
 	city *currentCity;
 	currentCity = end;
-
 	Push(route, currentCity->name); //push end city onto stack
+
 	if(strcmp(start->name, "I-5 Hwy-26 Junction") == 0) strcpy(start->direction, end->direction);
+	else if(strcmp(end->name, "I-5 Hwy-26 Junction") == 0) strcpy(end->direction, start->direction);
 
 	while(strcmp(currentJunction->direction, start->direction) != 0)//finding the start junction
 	{
 		currentJunction = currentJunction->nextJunction;
 	}
-
 	if(strcmp(start->direction, end->direction) != 0) //cities on different branches
 	{
 		*milesTotal = start->miles + end->miles;
@@ -173,11 +173,11 @@ void makePath(junction *root, city *start, city *end, STACK *route, float *miles
 	else if(start->miles > end->miles) //same branch, start is further down than end
 	{
 		*milesTotal = start->miles - end->miles;
-		
+
 		if(strcmp(end->name, "I-5 Hwy-26 Junction") == 0)
 		{
-			end = currentCity;
-			while(end->next != NULL) end = end->next;
+			currentCity = currentJunction->nextCity;
+			Push(route, currentCity->name);
 		}
 		while(strcmp(currentCity->name, start->name) != 0)
 		{
@@ -289,7 +289,7 @@ void userInput(junction *root, city *start, city *end) //root of the map, pointe
 			strcpy(start->name, "I-5 Hwy-26 Junction");
 			start->miles = 0;
 			break;
-		} 
+		}
 		else if(citySearch(startingCity, start, root) == 1) //if city exists in the map sets starting city and returns
 		{
 			break;
@@ -314,7 +314,7 @@ void userInput(junction *root, city *start, city *end) //root of the map, pointe
 			strcpy(end->name, "I-5 Hwy-26 Junction");
 			end->miles = 0;
 			break;
-		} 
+		}
 		else if(citySearch(endingCity, end, root) == 1)//checks if city exists in the map, if true sets the ending city and returns
 		{
 			break;
