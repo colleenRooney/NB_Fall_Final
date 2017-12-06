@@ -322,6 +322,7 @@ void userInput(junction *root, city *start, city *end) //root of the map, pointe
 		
 		if(compareCity) //starting and ending cities cannot be the same
 		{
+			junctionEnd = 0;
 			printf(RED "You're already there. Try another destination.\n" COLOR_RESET);
 		}
 		else if(citySearch(endingCity, end, root) == 1)//checks if city exists in the map, if true sets the ending city and returns
