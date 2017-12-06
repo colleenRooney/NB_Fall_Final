@@ -1,0 +1,77 @@
+|-----------------------------------------------------------------|
+|Portland Route Finder                                 _____      |
+|Given a starting city and a destination,          __ /__||_\__   |
+|this program will return a route between them.   |_( )____( )_|  |
+|-----------------------------------------------------------------|
+
+Enter the starting city(or 'citylist' for a list of available cities): vancouver
+Enter the destination city(or 'citylist' for a list of available cities): woodburn
+
+Heading south out of Vancouver on Interstate 5...
+passing North Portland...
+continuing south on Interstate 5...
+passing South Portland...
+passing Tigard...
+passing Lake Oswego...
+passing Tualatin...
+passing Stafford...
+passing Wilsonville...
+passing Aurora...
+passing Hubbard...
+arrived at Woodburn.
+Miles travelled: 49.30
+Total Cost of Trip: $4.44
+
+Check another route(y/n)? 
+
+|-----------------------------------------------------------------|
+|Portland Route Finder                                 _____      |
+|Given a starting city and a destination,          __ /__||_\__   |
+|this program will return a route between them.   |_( )____( )_|  |
+|-----------------------------------------------------------------|
+
+Enter the starting city(or 'citylist' for a list of available cities): vancouver
+Enter the destination city(or 'citylist' for a list of available cities): woodburn
+
+Heading south out of Vancouver on Interstate 5...
+passing North Portland...
+continuing south on Interstate 5...
+passing South Portland...
+passing Tigard...
+passing Lake Oswego...
+passing Tualatin...
+passing Stafford...
+passing Wilsonville...
+passing Aurora...
+passing Hubbard...
+arrived at Woodburn.
+Miles travelled: 49.30
+Total Cost of Trip: $4.44
+
+Check another route(y/n)? n 
+
+|-----------------------------------------------------------------|
+|Portland Route Finder                                 _____      |
+|Given a starting city and a destination,          __ /__||_\__   |
+|this program will return a route between them.   |_( )____( )_|  |
+|-----------------------------------------------------------------|
+
+Enter the starting city(or 'citylist' for a list of available cities): citylist
+North               South               East                West                
+--------------------------------------------------------------------------------------------
+North Portland      South Portland      East Portland       West Portland       
+Vancouver           Tigard              Gresham             Sylvan              
+                    Lake Oswego         Boring              Beaverton           
+                    Tualatin            Sandy               Tanasbourne         
+                    Stafford                                Hillsboro           
+                    Wilsonville                             North Plains        
+                    Aurora                                  Mountaindale        
+                    Hubbard                                                     
+                    Woodburn                                                    
+                                                                                
+Enter the starting city(or 'citylist' for a list of available cities): Vancuover
+City does not exist in map.
+Enter the starting city(or 'citylist' for a list of available cities): Vancouver
+Enter the destination city(or 'citylist' for a list of available cities): Vancouver
+You're already there. Try another destination.
+Enter the destination city(or 'citylist' for a list of available cities):
