@@ -273,8 +273,6 @@ void printCityList(junction *root)
 void userInput(junction *root, city *start, city *end) //root of the map, pointer to the starting city, pointer to the ending city
 {
 	char startingCity[MAX_LENGTH], endingCity[MAX_LENGTH];
-	int junctionStart = 0;
-	int junctionEnd = 0;
 
 	while(1) //get valid starting city
 	{
@@ -285,12 +283,12 @@ void userInput(junction *root, city *start, city *end) //root of the map, pointe
 		if(strcmp(startingCity, "Citylist") == 0) //prints out a list of cities in the map
 		{
 			printCityList(root);
+			continue;
 		}
 		else if(strcmp(startingCity, "Junction") == 0 || strcmp(startingCity, "I5") == 0 || strcmp (startingCity, "Hwy 26") == 0)
 		{
 			strcpy(start->name, "I-5 Hwy-26 Junction");
 			start->miles = 0;
-			junctionStart = 1;
 			break;
 		}
 		else if(citySearch(startingCity, start, root) == 1) //if city exists in the map sets starting city and returns
@@ -303,7 +301,6 @@ void userInput(junction *root, city *start, city *end) //root of the map, pointe
 		printf("Enter the destination city(or 'citylist' for a list of available cities): ");
 		fgets(endingCity, MAX_LENGTH, stdin);
 		standardizeInput(endingCity);
-		int compareCity = 0;
 
 		if(strcmp(endingCity, "Citylist") == 0)//prints out a list of cities in the map
 		{
@@ -313,16 +310,17 @@ void userInput(junction *root, city *start, city *end) //root of the map, pointe
 		{
 			strcpy(end->name, "I-5 Hwy-26 Junction");
 			end->miles = 0;
-			junctionEnd = 1;
-			if(!junctionStart) break;
+			if(strcmp(start->name, end->name) == 0)
+			{
+				printf(RED "You're already there. Try another destination.\n" COLOR_RESET);
+			}
+			else
+			{
+				break;
+			}
 		}
-
-		if(strcmp(startingCity, endingCity) == 0) compareCity = 1;
-		if(junctionStart && junctionEnd) compareCity = 1;
-		
-		if(compareCity) //starting and ending cities cannot be the same
+		else if(strcmp(startingCity, endingCity) == 0) //starting and ending cities cannot be the same
 		{
-			junctionEnd = 0;
 			printf(RED "You're already there. Try another destination.\n" COLOR_RESET);
 		}
 		else if(citySearch(endingCity, end, root) == 1)//checks if city exists in the map, if true sets the ending city and returns
