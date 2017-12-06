@@ -283,7 +283,6 @@ void userInput(junction *root, city *start, city *end) //root of the map, pointe
 		if(strcmp(startingCity, "Citylist") == 0) //prints out a list of cities in the map
 		{
 			printCityList(root);
-			continue;
 		}
 		else if(strcmp(startingCity, "Junction") == 0 || strcmp(startingCity, "I5") == 0 || strcmp (startingCity, "Hwy 26") == 0)
 		{
