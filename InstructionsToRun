@@ -1,3 +1,0 @@
-Compile main.c func.c stack.c with gcc.
-( gcc main.c func.c stack.c )
-Run a.out as usual.
